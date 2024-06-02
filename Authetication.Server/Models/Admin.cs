@@ -8,8 +8,13 @@ namespace Authetication.Server.Models
         [Key]
         public int IdAdmin { get; set; }
 
+        [MaxLength(100)]
         public string? NomeAdmin { get; set; }
+
+        [MaxLength(100)]
         public string? EmailAdmin { get; set; }
+
+        [MaxLength(100)]
         public string? PasswordAdmin { get; set; }
 
         [ForeignKey("IdUser")]

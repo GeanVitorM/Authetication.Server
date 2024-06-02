@@ -8,8 +8,13 @@ namespace Authetication.Server.Models
         [Key]
         public int IdUser { get; set; }
 
+        [MaxLength(100)]
         public string? Username { get; set; }
+
+        [MaxLength(100)]
         public string? Password { get; set; }
+
+        [MaxLength(100)]
         public string? TipoUsuario { get; set; }
 
         // Navegação para as outras entidades

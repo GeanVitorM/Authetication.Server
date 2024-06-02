@@ -8,8 +8,13 @@ namespace Authetication.Server.Models
         [Key]
         public int IdCoordenador { get; set; }
 
+        [MaxLength(100)]
         public string? NomeCoordenador { get; set; }
+
+        [MaxLength(100)]
         public string? EmailCoordenador { get; set; }
+
+        [MaxLength(100)]
         public string? PasswordCoordenador { get; set; }
 
         [ForeignKey("IdUser")]
