@@ -1,6 +1,4 @@
-﻿using Authentication.Server.Context;
-using Authentication.Server.Models;
-using Authetication.Server.Context;
+﻿using Authetication.Server.Context;
 using Authetication.Server.Models;
 using Authetication.Server.Repository;
 using Microsoft.EntityFrameworkCore;

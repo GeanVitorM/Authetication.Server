@@ -16,7 +16,7 @@ public class PacienteService : IPacienteService
         repository = repository;
     }
 
-    public async Task CreatPaciente(PacienteDto pacienteDto)
+    public async Task CreatePaciente(PacienteDto pacienteDto)
     {
         try
         {

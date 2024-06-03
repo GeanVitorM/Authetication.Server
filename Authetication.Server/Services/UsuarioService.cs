@@ -2,83 +2,101 @@
 using Authetication.Server.Models;
 using Authetication.Server.Repository;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Authetication.Server.Services;
-
-public class UsuarioService : IUsuarioService
+namespace Authetication.Server.Services
 {
-    private readonly IMapper  _mapper;
-    private readonly IUsuarioRepository _repository;
-
-    public UsuarioService(IMapper mapper , IUsuarioRepository repository)
+    public class UsuarioService : IUsuarioService
     {
-        _mapper = mapper;
-        repository = repository;
-    }
+        private readonly IMapper _mapper;
+        private readonly IUsuarioRepository _repository;
 
-    public async  Task CreateUsuario(UsuarioDto usuarioDto)
-    {
-        try
+        public UsuarioService(IMapper mapper, IUsuarioRepository repository)
         {
-            var usuarioEntity = _mapper.Map<Usuario>(usuarioDto);
-            await _repository.CreateNewUsuario(usuarioEntity);
-            usuarioDto.IdUser = usuarioEntity.IdUser;
+            _mapper = mapper;
+            _repository = repository;
         }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
-    }
 
-    public async Task DeleteUsuario(int id)
-    {
-        try
+        public async Task CreateUsuario(UsuarioDto usuarioDto)
         {
-            var usuarioEntity = await _repository.GetById(id);
-            await _repository.DeleteUsuario(usuarioEntity.IdUser);
+            try
+            {
+                var usuarioEntity = _mapper.Map<Usuario>(usuarioDto);
+                await _repository.CreateNewUsuario(usuarioEntity);
+                usuarioDto.IdUser = usuarioEntity.IdUser;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
-    }
 
-    public async Task<IEnumerable<UsuarioDto>> GetAllUsers()
-    {
-        try
+        public async Task DeleteUsuario(int id)
         {
-            var usuarioEntity = await _repository.GetAll();
-            return _mapper.Map<IEnumerable<UsuarioDto>>(usuarioEntity);
+            try
+            {
+                var usuarioEntity = await _repository.GetById(id);
+                await _repository.DeleteUsuario(usuarioEntity.IdUser);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
-    }
 
-    public async Task<UsuarioDto> GetUsuarioById(int id)
-    {
-        try
+        public async Task<IEnumerable<UsuarioDto>> GetAllUsers()
         {
-            var usuarioEntity = await _repository.GetById(id);
-            return _mapper.Map<UsuarioDto>(usuarioEntity);
+            try
+            {
+                var usuarioEntity = await _repository.GetAll();
+                return _mapper.Map<IEnumerable<UsuarioDto>>(usuarioEntity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
-    }
 
-    public async Task UpdateUsuario(UsuarioDto usuarioDto)
-    {
-        try
+        public async Task<UsuarioDto> GetUsuarioById(int id)
         {
-            var usuarioEntity = _mapper.Map<Usuario>(usuarioDto);
-            await _repository.UpdateUsuario(usuarioEntity);
+            try
+            {
+                var usuarioEntity = await _repository.GetById(id);
+                return _mapper.Map<UsuarioDto>(usuarioEntity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
-        catch (Exception ex)
+
+        public async Task UpdateUsuario(UsuarioDto usuarioDto)
         {
-            throw new Exception(ex.Message);
+            try
+            {
+                var usuarioEntity = _mapper.Map<Usuario>(usuarioDto);
+                await _repository.UpdateUsuario(usuarioEntity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<UsuarioDto> GetUsuarioByUsernameAndPassword(string username, string password)
+        {
+            try
+            {
+                var usuarioEntity = await _repository.GetByUsernameAndPassword(username, password);
+                return _mapper.Map<UsuarioDto>(usuarioEntity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

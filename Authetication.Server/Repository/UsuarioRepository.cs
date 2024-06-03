@@ -1,12 +1,14 @@
 ﻿using Authetication.Server.Context;
 using Authetication.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Authetication.Server.Repository;
 
 public class UsuarioRepository : IUsuarioRepository
 {
     private readonly AppDbContext _context;
+
     public UsuarioRepository(AppDbContext context)
     {
         _context = context;
@@ -30,10 +32,10 @@ public class UsuarioRepository : IUsuarioRepository
     {
         try
         {
-            var usario = await GetById(id);
-            _context.Usuarios.Remove(usario);
+            var usuario = await GetById(id);
+            _context.Usuarios.Remove(usuario);
             await _context.SaveChangesAsync();
-            return usario;
+            return usuario;
         }
         catch (Exception ex)
         {
@@ -57,7 +59,7 @@ public class UsuarioRepository : IUsuarioRepository
     {
         try
         {
-            return await _context.Usuarios.Where(p => p.IdUser == id).FirstOrDefaultAsync();
+            return await _context.Usuarios.FirstOrDefaultAsync(p => p.IdUser == id);
         }
         catch (Exception ex)
         {
@@ -72,6 +74,18 @@ public class UsuarioRepository : IUsuarioRepository
             _context.Entry(usuario).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return usuario;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    public async Task<Usuario> GetByUsernameAndPassword(string username, string password)
+    {
+        try
+        {
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
         }
         catch (Exception ex)
         {

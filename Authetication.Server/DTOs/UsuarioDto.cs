@@ -18,7 +18,7 @@ public class UsuarioDto
     [Required(ErrorMessage = "Type is required")]
     public string? TipoUsuario { get; set; }
 
-    public Admin? Admin { get; set; }
+    public AdminDto? Admin { get; set; }
     public PacienteDto? Paciente { get; set; }
     public FisioterapeutaDto? Fisioterapeuta { get; set; }
     public CoordenadorDto? Coordenador { get; set; }
