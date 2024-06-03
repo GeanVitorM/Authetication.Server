@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Authetication.Server.DTOs;
 
-public class Admin
+public class AdminDto
 {
     [Key]
     public int IdAdmin { get; set; }
