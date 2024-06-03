@@ -19,5 +19,5 @@ public class Admin
     public string? PasswordAdmin { get; set; }
 
     [ForeignKey("IdUser")]
-    public Login? Login { get; set; }
+    public UsuarioDto? Usuario { get; set; }
 }

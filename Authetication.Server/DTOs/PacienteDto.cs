@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Authetication.Server.DTOs;
 
-public class Paciente
+public class PacienteDto
 {
     [Key]
     public int IdPaciente { get; set; }
@@ -46,5 +46,5 @@ public class Paciente
     public string? PasswordPaciente { get; set; }
 
     [ForeignKey("IdUser")]
-    public Login? Login { get; set; }
+    public UsuarioDto? Usuario { get; set; }
 }

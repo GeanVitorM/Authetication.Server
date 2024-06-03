@@ -2,7 +2,7 @@
 
 namespace Authetication.Server.DTOs;
 
-public class Login
+public class UsuarioDto
 {
 
     [Key]
@@ -19,7 +19,7 @@ public class Login
     public string? TipoUsuario { get; set; }
 
     public Admin? Admin { get; set; }
-    public Paciente? Paciente { get; set; }
-    public Fisioterapeuta? Fisioterapeuta { get; set; }
-    public Coordenador? Coordenador { get; set; }
+    public PacienteDto? Paciente { get; set; }
+    public FisioterapeutaDto? Fisioterapeuta { get; set; }
+    public CoordenadorDto? Coordenador { get; set; }
 }

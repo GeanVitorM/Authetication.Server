@@ -22,5 +22,5 @@ public class Paciente
     public string? PasswordPaciente { get; set; }
 
     [ForeignKey("IdUser")]
-    public Login? Login { get; set; }
+    public Usuario? Usuario { get; set; }
 }

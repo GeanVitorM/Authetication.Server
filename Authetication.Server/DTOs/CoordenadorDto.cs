@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Authetication.Server.DTOs;
 
-public class Coordenador
+public class CoordenadorDto
 {
     [Key]
     public int IdCoordenador { get; set; }
@@ -19,5 +19,5 @@ public class Coordenador
     public string? PasswordCoordenador { get; set; }
 
     [ForeignKey("IdUser")]
-    public Login? Login { get; set; }
+    public UsuarioDto? Usuario { get; set; }
 }

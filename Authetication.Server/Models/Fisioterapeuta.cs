@@ -24,5 +24,5 @@ public class Fisioterapeuta
     public string? PasswordFisio { get; set; }
 
     [ForeignKey("IdUser")]
-    public Login? Login { get; set; }
+    public Usuario? Usuario { get; set; }
 }

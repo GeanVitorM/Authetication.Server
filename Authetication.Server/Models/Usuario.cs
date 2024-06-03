@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Authetication.Server.Models
 {
-    public class Login
+    public class Usuario
     {
         [Key]
         public int IdUser { get; set; }

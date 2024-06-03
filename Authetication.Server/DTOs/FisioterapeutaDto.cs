@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Authetication.Server.Models;
 
 namespace Authetication.Server.DTOs;
 
-public class Fisioterapeuta
+public class FisioterapeutaDto
 {
     [Key]
     public int IdFisio { get; set; }
@@ -25,5 +26,5 @@ public class Fisioterapeuta
     public string? PasswordFisio { get; set; }
 
     [ForeignKey("IdUser")]
-    public Login? Login { get; set; }
+    public UsuarioDto? Usuario { get; set; }
 }

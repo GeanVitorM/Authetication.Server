@@ -18,6 +18,6 @@ namespace Authetication.Server.Models
         public string? PasswordAdmin { get; set; }
 
         [ForeignKey("IdUser")]
-        public Login? Login { get; set; }
+        public Usuario? Usuario { get; set; }
     }
 }
