@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Authetication.Server.Repository;
 
-public class FisoterapeutaRepository : IFisioterapeutaRepository
+public class FisioterapeutaRepository : IFisioterapeutaRepository
 {
     private readonly AppDbContext _context;
-    public FisoterapeutaRepository(AppDbContext context)
+    public FisioterapeutaRepository(AppDbContext context)
     {
         _context = context;
     }

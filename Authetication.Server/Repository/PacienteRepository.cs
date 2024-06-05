@@ -11,7 +11,7 @@ public class PacienteRepository : IPacienteRepository
 
     public PacienteRepository(AppDbContext context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     public async Task<Paciente> CreateNewPaciente(Paciente paciente)

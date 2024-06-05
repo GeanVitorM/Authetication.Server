@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Authetication.Server.Models;
+using Authetication.Server.DTOs;
 
 namespace Authetication.Server.Context
 {
@@ -16,6 +17,12 @@ namespace Authetication.Server.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+
+
+            modelBuilder.Entity<Usuario>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
 
             modelBuilder.Entity<Admin>()
                 .HasOne(a => a.Usuario)

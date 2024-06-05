@@ -9,7 +9,7 @@ public class AdminRepository : IAdminRepository
     private readonly AppDbContext _context;
     public AdminRepository(AppDbContext context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     public async Task<Admin> CreateNewAdmin(Admin admin)
