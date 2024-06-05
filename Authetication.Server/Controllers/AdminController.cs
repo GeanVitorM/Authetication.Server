@@ -1,5 +1,6 @@
 ﻿using Authetication.Server.DTOs;
 using Authetication.Server.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult<IEnumerable<AdminDto>>> Get()
     {
         try
@@ -40,6 +42,7 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetAdmin")]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult<AdminDto>> Get(int id)
     {
         try
@@ -59,6 +62,7 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult> Post([FromBody] AdminDto adminDto)
     {
         if (adminDto == null)
@@ -77,6 +81,7 @@ public class AdminController : ControllerBase
     }
 
     [HttpPut()]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult> Put([FromBody] AdminDto adminDto)
     {
         if (adminDto == null)
@@ -95,6 +100,7 @@ public class AdminController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult<AdminDto>> Delete(int id)
     {
         try

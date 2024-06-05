@@ -17,7 +17,7 @@ public class MappingProfile : Profile
         CreateMap<Coordenador, CoordenadorDto>();
 
         CreateMap<PacienteDto, Paciente>();
-        CreateMap<PacienteDto, Paciente>();
+        CreateMap<Paciente, PacienteDto>();
 
         CreateMap<UsuarioDto, Usuario>();
         CreateMap<Usuario, UsuarioDto>();

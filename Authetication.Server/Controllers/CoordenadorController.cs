@@ -1,5 +1,6 @@
 ﻿using Authetication.Server.DTOs;
 using Authetication.Server.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ public class CoordenadorController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult<IEnumerable<CoordenadorDto>>> Get()
     {
         try
@@ -40,6 +42,7 @@ public class CoordenadorController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetCoord")]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult<CoordenadorDto>> Get(int id)
     {
         try
@@ -59,6 +62,7 @@ public class CoordenadorController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult> Post([FromBody] CoordenadorDto coordenadorDto)
     {
         if (coordenadorDto == null)
@@ -77,6 +81,7 @@ public class CoordenadorController : ControllerBase
     }
 
     [HttpPut()]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult> Put([FromBody] CoordenadorDto coordenadorDto)
     {
         if (coordenadorDto == null)
@@ -95,6 +100,7 @@ public class CoordenadorController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult<CoordenadorDto>> Delete(int id)
     {
         try

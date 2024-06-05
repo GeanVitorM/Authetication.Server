@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Authetication.Server.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Authetication.Server.DTOs;
 
@@ -16,7 +17,7 @@ public class UsuarioDto
     public string? Password { get; set; }
 
     [Required(ErrorMessage = "Type is required")]
-    public string? TipoUsuario { get; set; }
+    public TipoUsuario TipoUsuario { get; set; }
 
     public AdminDto? Admin { get; set; }
     public PacienteDto? Paciente { get; set; }

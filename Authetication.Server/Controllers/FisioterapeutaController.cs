@@ -1,5 +1,6 @@
 ﻿using Authetication.Server.DTOs;
 using Authetication.Server.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ public class FisioterapeutaController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "AdminOrCoordenadorPolicy")]
     public async Task<ActionResult<IEnumerable<FisioterapeutaDto>>> Get()
     {
         try
@@ -40,6 +42,7 @@ public class FisioterapeutaController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetFisio")]
+    [Authorize(Policy = "AdminOrCoordenadorPolicy")]
     public async Task<ActionResult<FisioterapeutaDto>> Get(int id)
     {
         try
@@ -59,6 +62,7 @@ public class FisioterapeutaController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "AdminOrCoordenadorPolicy")]
     public async Task<ActionResult> Post([FromBody] FisioterapeutaDto fisioterapeutaDto)
     {
         if (fisioterapeutaDto == null)
@@ -77,6 +81,7 @@ public class FisioterapeutaController : ControllerBase
     }
 
     [HttpPut()]
+    [Authorize(Policy = "AdminOrCoordenadorPolicy")]
     public async Task<ActionResult> Put([FromBody] FisioterapeutaDto fisioterapeutaDto)
     {
         if (fisioterapeutaDto == null)
@@ -95,6 +100,7 @@ public class FisioterapeutaController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "AdminOrCoordenadorPolicy")]
     public async Task<ActionResult<FisioterapeutaDto>> Delete(int id)
     {
         try

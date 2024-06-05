@@ -1,23 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Authetication.Server.Models
+namespace Authetication.Server.Models;
+
+public class Coordenador
 {
-    public class Coordenador
-    {
-        [Key]
-        public int IdCoordenador { get; set; }
+    [Key]
+    public int IdCoordenador { get; set; }
 
-        [MaxLength(100)]
-        public string? NomeCoordenador { get; set; }
+    [MaxLength(100)]
+    public string? NomeCoordenador { get; set; }
 
-        [MaxLength(100)]
-        public string? EmailCoordenador { get; set; }
+    [MaxLength(100)]
+    public string? EmailCoordenador { get; set; }
 
-        [MaxLength(100)]
-        public string? PasswordCoordenador { get; set; }
+    public TipoUsuario TipoUsuario { get; set; }
 
-        [ForeignKey("IdUser")]
-        public Usuario? Usuario { get; set; }
-    }
+    [ForeignKey("IdUser")]
+    public Usuario? Usuario { get; set; }
 }

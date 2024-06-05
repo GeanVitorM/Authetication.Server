@@ -2,6 +2,7 @@
 using Authetication.Server.Models;
 using Authetication.Server.Repository;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,13 @@ namespace Authetication.Server.Services
     {
         private readonly IMapper _mapper;
         private readonly IUsuarioRepository _repository;
+        private readonly IPasswordHasher<Usuario> _passwordHasher;
 
-        public UsuarioService(IMapper mapper, IUsuarioRepository repository)
+        public UsuarioService(IMapper mapper, IUsuarioRepository repository, IPasswordHasher<Usuario> passwordHasher)
         {
             _mapper = mapper;
             _repository = repository;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task CreateUsuario(UsuarioDto usuarioDto)
@@ -25,6 +28,7 @@ namespace Authetication.Server.Services
             try
             {
                 var usuarioEntity = _mapper.Map<Usuario>(usuarioDto);
+                usuarioEntity.Password = _passwordHasher.HashPassword(usuarioEntity, usuarioDto.Password);
                 await _repository.CreateNewUsuario(usuarioEntity);
                 usuarioDto.IdUser = usuarioEntity.IdUser;
             }

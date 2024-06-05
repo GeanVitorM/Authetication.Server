@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Authetication.Server.Models;
 
 namespace Authetication.Server.DTOs;
 
@@ -16,7 +17,7 @@ public class AdminDto
     public string? EmailAdmin { get; set; }
 
     [Required(ErrorMessage = "Password is required")]
-    public string? PasswordAdmin { get; set; }
+    public TipoUsuario TipoUsuario { get; set; }
 
     [ForeignKey("IdUser")]
     public UsuarioDto? Usuario { get; set; }

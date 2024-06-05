@@ -3,34 +3,36 @@ using Authetication.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Authetication.Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PacienteController : ControllerBase
+public class UsuarioController : ControllerBase
 {
-    private readonly ILogger<PacienteController> _logger;
-    private readonly IPacienteService _service;
+    private readonly ILogger<UsuarioController> _logger;
+    private readonly IUsuarioService _service;
 
-    public PacienteController(ILogger<PacienteController> logger, IPacienteService service)
+    public UsuarioController(ILogger<UsuarioController> logger, IUsuarioService service)
     {
         _logger = logger;
         _service = service;
     }
 
+    [Authorize(Policy = "AdminPolicy")]
     [HttpGet]
-    [Authorize(Policy = "FisioterapeutaPolicy")]
-    public async Task<ActionResult<IEnumerable<PacienteDto>>> Get()
+    public async Task<ActionResult<IEnumerable<UsuarioDto>>> Get()
     {
         try
         {
-            var pacienteDto = await _service.GetAllPacientes();
-            if (pacienteDto == null)
+            var usuarioDto = await _service.GetAllUsers();
+            if (usuarioDto == null)
             {
-                return NotFound("Pacientes not found");
+                return NotFound("Usuarios not found");
             }
-            return Ok(pacienteDto);
+            return Ok(usuarioDto);
         }
         catch (Exception ex)
         {
@@ -39,18 +41,18 @@ public class PacienteController : ControllerBase
         }
     }
 
-    [HttpGet("{id}", Name = "GetPaciente")]
-    [Authorize(Policy = "FisioterapeutaPolicy")]
-    public async Task<ActionResult<PacienteDto>> Get(int id)
+    [HttpGet("{id}", Name = "GetUser")]
+    [Authorize(Policy = "AdminPolicy")]
+    public async Task<ActionResult<UsuarioDto>> Get(int id)
     {
         try
         {
-            var pacienteDto = await _service.GetPacienteById(id);
-            if (pacienteDto == null)
+            var usuarioDto = await _service.GetUsuarioById(id);
+            if (usuarioDto == null)
             {
-                return NotFound("Pacientes not found");
+                return NotFound("Usuario not found");
             }
-            return Ok(pacienteDto);
+            return Ok(usuarioDto);
         }
         catch (Exception ex)
         {
@@ -61,15 +63,15 @@ public class PacienteController : ControllerBase
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<ActionResult> Post([FromBody] PacienteDto pacienteDto)
+    public async Task<ActionResult> Post([FromBody] UsuarioDto usuarioDto)
     {
-        if (pacienteDto == null)
+        if (usuarioDto == null)
             return BadRequest("Data Invalid");
 
         try
         {
-            await _service.CreatePaciente(pacienteDto);
-            return new CreatedAtRouteResult("GetPaciente", new { id = pacienteDto.IdPaciente }, pacienteDto);
+            await _service.CreateUsuario(usuarioDto);
+            return new CreatedAtRouteResult("GetUser", new { id = usuarioDto.IdUser }, usuarioDto);
         }
         catch (Exception ex)
         {
@@ -79,16 +81,16 @@ public class PacienteController : ControllerBase
     }
 
     [HttpPut()]
-    [Authorize(Policy = "PacientePolicy")]
-    public async Task<ActionResult> Put([FromBody] PacienteDto pacienteDto)
+    [Authorize(Policy = "AdminPolicy")]
+    public async Task<ActionResult> Put([FromBody] UsuarioDto usuarioDto)
     {
-        if (pacienteDto == null)
+        if (usuarioDto == null)
             return BadRequest("Data invalid");
 
         try
         {
-            await _service.UpdatePaciente(pacienteDto);
-            return Ok(pacienteDto);
+            await _service.UpdateUsuario(usuarioDto);
+            return Ok(usuarioDto);
         }
         catch (Exception ex)
         {
@@ -98,19 +100,19 @@ public class PacienteController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Policy = "AdminOrCoordenadorPolicy")]
-    public async Task<ActionResult<PacienteDto>> Delete(int id)
+    [Authorize(Policy = "AdminPolicy")]
+    public async Task<ActionResult<UsuarioDto>> Delete(int id)
     {
         try
         {
-            var pacienteDto = await _service.GetPacienteById(id);
-            if (pacienteDto == null)
+            var usuarioDto = await _service.GetUsuarioById(id);
+            if (usuarioDto == null)
             {
-                return NotFound("Paciente not found");
+                return NotFound("Usuario not found");
             }
 
-            await _service.DeletePaciente(id);
-            return Ok(pacienteDto);
+            await _service.DeleteUsuario(id);
+            return Ok(usuarioDto);
         }
         catch (Exception ex)
         {

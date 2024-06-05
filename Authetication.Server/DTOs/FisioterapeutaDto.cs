@@ -23,7 +23,8 @@ public class FisioterapeutaDto
     public string? SemestreFisio { get; set; }
 
     [Required(ErrorMessage = "Password is required")]
-    public string? PasswordFisio { get; set; }
+
+    public TipoUsuario TipoUsuario { get; set; }
 
     [ForeignKey("IdUser")]
     public UsuarioDto? Usuario { get; set; }

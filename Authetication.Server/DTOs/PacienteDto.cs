@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Authetication.Server.Models;
 
 namespace Authetication.Server.DTOs;
 
@@ -41,9 +42,7 @@ public class PacienteDto
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "The Email field is not a valid e-mail address.")]
     public string? EmailPaciente { get; set; }
-
-    [Required(ErrorMessage = "Password is required")]
-    public string? PasswordPaciente { get; set; }
+    public TipoUsuario TipoUsuario { get; set; }
 
     [ForeignKey("IdUser")]
     public UsuarioDto? Usuario { get; set; }

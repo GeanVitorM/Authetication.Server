@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Authetication.Server.Models;
 
@@ -14,14 +14,12 @@ public class Fisioterapeuta
     [MaxLength(100)]
     public string? EmailFisio { get; set; }
 
-    [MaxLength(100)]
     public int Matricula { get; set; }
 
     [MaxLength(100)]
     public string? SemestreFisio { get; set; }
 
-    [MaxLength(100)]
-    public string? PasswordFisio { get; set; }
+    public TipoUsuario TipoUsuario { get; set; }
 
     [ForeignKey("IdUser")]
     public Usuario? Usuario { get; set; }

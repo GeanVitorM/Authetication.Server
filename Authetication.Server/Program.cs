@@ -11,6 +11,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Authetication.Server.Repository;
 using Authentication.Server.Repository;
+using Authetication.Server.Models;
+using Microsoft.AspNetCore.Identity;
+using Authetication.Server.Middlewares;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +25,8 @@ var connectionDb = configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionDb));
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddLogging();
+
+builder.Services.AddScoped<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
 
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
@@ -38,7 +44,37 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddControllers();
 // Saiba mais sobre a configuração do Swagger/OpenAPI em https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Lads", Version = "v1.0.1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"Enter 'Bearer' [Space] Your Token",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
+});
 
 var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"]);
 builder.Services.AddAuthentication(options =>
@@ -55,9 +91,20 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = false,
-        ValidateAudience = false
+        ValidateAudience = false,
+        RoleClaimType = "Role"
     };
 });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("CoordenadorPolicy", policy => policy.RequireRole("Admin", "Coordenador"));
+    options.AddPolicy("FisioterapeutaPolicy", policy => policy.RequireRole("Admin", "Coordenador", "Fisioterapeuta"));
+    options.AddPolicy("AdminOrCoordenadorPolicy", policy => policy.RequireRole("Admin", "Coordenador"));
+    options.AddPolicy("PacientePolicy", policy => policy.RequireRole("Paciente", "Admin"));
+});
+
 
 var app = builder.Build();
 
@@ -67,6 +114,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseJwtRoleExtractor();
 
 app.UseHttpsRedirection();
 

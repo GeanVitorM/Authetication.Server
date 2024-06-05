@@ -2,87 +2,108 @@
 using Authetication.Server.Models;
 using Authetication.Server.Repository;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Authetication.Server.Services;
-
-public class PacienteService : IPacienteService
+namespace Authetication.Server.Services
 {
-    private readonly IMapper _mapper;
-    private readonly IPacienteRepository _repository;
-
-    public PacienteService(IMapper mapper, IPacienteRepository repository)
+    public class PacienteService : IPacienteService
     {
-        _mapper = mapper;
-        repository = repository;
-    }
+        private readonly IMapper _mapper;
+        private readonly IPacienteRepository _repository;
+        private readonly ILogger<PacienteService> _logger;
 
-    public async Task CreatePaciente(PacienteDto pacienteDto)
-    {
-        try
+        public PacienteService(IMapper mapper, IPacienteRepository repository, ILogger<PacienteService> logger)
         {
-            var pacienteEntity = _mapper.Map<Paciente>(pacienteDto);
-            await _repository.CreateNewPaciente(pacienteEntity);
-            pacienteDto.IdPaciente = pacienteEntity.IdPaciente;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-    }
-
-    public async Task DeletePaciente(int id)
-    {
-        try
+        public async Task CreatePaciente(PacienteDto pacienteDto)
         {
-            var pacienteEntity = await _repository.GetById(id);
-            await _repository.DeletePaciente(pacienteEntity.IdPaciente);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
-
-    }
-
-    public async  Task<IEnumerable<PacienteDto>> GetAllPacientes()
-    {
-        try
-        {
-            var pacienteEntity = await _repository.GetAll();
-            return _mapper.Map<IEnumerable<PacienteDto>>(pacienteEntity);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
+            try
+            {
+                var pacienteEntity = _mapper.Map<Paciente>(pacienteDto);
+                await _repository.CreateNewPaciente(pacienteEntity);
+                pacienteDto.IdPaciente = pacienteEntity.IdPaciente;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao criar paciente.");
+                throw new Exception(ex.Message, ex);
+            }
         }
 
-    }
-
-    public async  Task<PacienteDto> GetPacienteById(int id)
-    {
-        try
+        public async Task DeletePaciente(int id)
         {
-            var pacienteEntity = await _repository.GetById(id);
-            return _mapper.Map<PacienteDto>(pacienteEntity);
+            try
+            {
+                var pacienteEntity = await _repository.GetById(id);
+                if (pacienteEntity == null)
+                {
+                    throw new Exception("Paciente não encontrado.");
+                }
+                await _repository.DeletePaciente(pacienteEntity.IdPaciente);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao deletar paciente.");
+                throw new Exception(ex.Message, ex);
+            }
         }
-        catch (Exception ex)
+
+        public async Task<IEnumerable<PacienteDto>> GetAllPacientes()
         {
-            throw new Exception(ex.Message);
+            try
+            {
+                var pacienteEntities = await _repository.GetAll();
+                if (pacienteEntities == null || !pacienteEntities.Any())
+                {
+                    throw new Exception("Nenhum paciente encontrado.");
+                }
+                return _mapper.Map<IEnumerable<PacienteDto>>(pacienteEntities);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao recuperar pacientes.");
+                throw new Exception($"Erro ao recuperar pacientes: {ex.Message}", ex);
+            }
         }
 
-    }
-
-    public async Task UpdatePaciente(PacienteDto pacienteDto)
-    {
-        try
+        public async Task<PacienteDto> GetPacienteById(int id)
         {
-            var projetoEntity = _mapper.Map<Paciente>(pacienteDto);
-            await _repository.UpdatePaciente(projetoEntity);
+            try
+            {
+                var pacienteEntity = await _repository.GetById(id);
+                if (pacienteEntity == null)
+                {
+                    throw new Exception("Paciente não encontrado.");
+                }
+                return _mapper.Map<PacienteDto>(pacienteEntity);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao recuperar paciente por ID.");
+                throw new Exception(ex.Message, ex);
+            }
         }
-        catch (Exception ex)
+
+        public async Task UpdatePaciente(PacienteDto pacienteDto)
         {
-            throw new Exception(ex.Message);
+            try
+            {
+                var pacienteEntity = _mapper.Map<Paciente>(pacienteDto);
+                await _repository.UpdatePaciente(pacienteEntity);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao atualizar paciente.");
+                throw new Exception(ex.Message, ex);
+            }
         }
     }
 }
