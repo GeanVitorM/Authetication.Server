@@ -9,7 +9,7 @@ public class Usuario
     public int IdUser { get; set; }
 
     [MaxLength(100)]
-    public string? Name { get; set; }
+    public string? NameUser { get; set; }
 
     [MaxLength(100)]
     public string? Login { get; set; }

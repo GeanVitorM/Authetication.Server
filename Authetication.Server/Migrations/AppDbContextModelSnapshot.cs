@@ -162,7 +162,7 @@ namespace Authetication.Server.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameUser")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
