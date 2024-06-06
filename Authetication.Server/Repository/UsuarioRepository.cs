@@ -85,7 +85,7 @@ public class UsuarioRepository : IUsuarioRepository
     {
         try
         {
-            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Login == username && u.Password == password);
         }
         catch (Exception ex)
         {

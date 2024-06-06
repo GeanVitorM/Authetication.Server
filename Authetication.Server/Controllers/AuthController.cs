@@ -28,7 +28,7 @@ namespace Authetication.Server.Controllers
 
             try
             {
-                var token = await _authService.Authenticate(loginDto.Username, loginDto.Password);
+                var token = await _authService.Authenticate(loginDto.Login, loginDto.Password);
                 if (token == null)
                     return Unauthorized();
 

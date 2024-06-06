@@ -10,8 +10,11 @@ public class UsuarioDto
     public int IdUser { get; set; }
 
     [Required(ErrorMessage = "Name is required")]
+    public string? NameUser { get; set; }
+
+    [Required(ErrorMessage = "Name is required")]
     [EmailAddress(ErrorMessage = "The Email field is not a valid e-mail address.")]
-    public string? Username { get; set; }
+    public string? Login { get; set; }
 
     [Required(ErrorMessage = "Password is required")]
     public string? Password { get; set; }

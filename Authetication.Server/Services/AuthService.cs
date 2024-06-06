@@ -41,7 +41,7 @@ namespace Authetication.Server.Services
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, usuarioDto.Username),
+                new Claim(ClaimTypes.Name, usuarioDto.Login),
                 new Claim("UserId", usuarioDto.IdUser.ToString()),
             };
             switch (usuarioDto.TipoUsuario)
