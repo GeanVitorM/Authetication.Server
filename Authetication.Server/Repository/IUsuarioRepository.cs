@@ -8,8 +8,8 @@ public interface IUsuarioRepository
 {
     Task<IEnumerable<Usuario>> GetAll();
     Task<Usuario> GetById(int id);
-    Task<Usuario> CreateNewUsuario(Usuario usuario);
-    Task<Usuario> UpdateUsuario(Usuario usuario);
-    Task<Usuario> DeleteUsuario(int id);
-    Task<Usuario> GetByUsernameAndPassword(string username, string password);
+    Task CreateNewUsuario(Usuario usuario);
+    Task UpdateUsuario(Usuario usuario);
+    Task DeleteUsuario(int id);
+    Task<Usuario> GetByUsername(string username);
 }

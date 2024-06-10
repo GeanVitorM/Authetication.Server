@@ -21,7 +21,7 @@ namespace Authetication.Server.Context
 
 
             modelBuilder.Entity<Usuario>()
-                .HasIndex(u => u.Login)
+                .HasIndex(u => u.Username)
                 .IsUnique();
 
             modelBuilder.Entity<Admin>()

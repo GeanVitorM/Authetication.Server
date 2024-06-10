@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Authetication.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class DbAtualizacao : Migration
+    public partial class intial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,8 +18,7 @@ namespace Authetication.Server.Migrations
                 {
                     IdUser = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    NameUser = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Login = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Username = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     Password = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     TipoUsuario = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -124,9 +123,9 @@ namespace Authetication.Server.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Usuarios_Login",
+                name: "IX_Usuarios_Username",
                 table: "Usuarios",
-                column: "Login",
+                column: "Username",
                 unique: true);
         }
 

@@ -73,9 +73,7 @@ namespace Authetication.Server.Controllers
 
             try
             {
-                // Adiciona lógica para criar o tipo de usuário correspondente
                 await CreateTipoUsuario(usuarioDto);
-
                 await _service.CreateUsuario(usuarioDto);
                 return new CreatedAtRouteResult("GetUser", new { id = usuarioDto.IdUser }, usuarioDto);
             }
@@ -129,34 +127,36 @@ namespace Authetication.Server.Controllers
 
         private async Task CreateTipoUsuario(UsuarioDto usuarioDto)
         {
+            string username = usuarioDto.Username.Split('@')[0];
+
             switch (usuarioDto.TipoUsuario)
             {
                 case TipoUsuario.Admin:
                     usuarioDto.Admin = new AdminDto
                     {
-                        NomeAdmin = usuarioDto.NameUser,
-                        EmailAdmin = usuarioDto.Login
+                        NomeAdmin = username,
+                        EmailAdmin = usuarioDto.Username
                     };
                     break;
                 case TipoUsuario.Coordenador:
                     usuarioDto.Coordenador = new CoordenadorDto
                     {
-                        NomeCoordenador = usuarioDto.NameUser,
-                        EmailCoordenador = usuarioDto.Login
+                        NomeCoordenador = username,
+                        EmailCoordenador = usuarioDto.Username
                     };
                     break;
                 case TipoUsuario.Paciente:
                     usuarioDto.Paciente = new PacienteDto
                     {
-                        NomePaciente = usuarioDto.NameUser,
-                        EmailPaciente = usuarioDto.Login
+                        NomePaciente = username,
+                        EmailPaciente = usuarioDto.Username
                     };
                     break;
                 case TipoUsuario.Fisioterapeuta:
                     usuarioDto.Fisioterapeuta = new FisioterapeutaDto
                     {
-                        NomeFisio = usuarioDto.NameUser,
-                        EmailFisio = usuarioDto.Login
+                        NomeFisio = username,
+                        EmailFisio = usuarioDto.Username
                     };
                     break;
                 default:

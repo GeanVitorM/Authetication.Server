@@ -1,6 +1,8 @@
 ﻿using Authetication.Server.Context;
 using Authetication.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Authetication.Server.Repository;
@@ -14,28 +16,23 @@ public class UsuarioRepository : IUsuarioRepository
         _context = context;
     }
 
-    public async Task<Usuario> CreateNewUsuario(Usuario usuario)
+    public async Task CreateNewUsuario(Usuario usuario)
     {
-        try
-        {
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
-            return usuario;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
+        usuario.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
+        _context.Usuarios.Add(usuario);
+        await _context.SaveChangesAsync();
     }
 
-    public async Task<Usuario> DeleteUsuario(int id)
+    public async Task DeleteUsuario(int id)
     {
         try
         {
             var usuario = await GetById(id);
-            _context.Usuarios.Remove(usuario);
-            await _context.SaveChangesAsync();
-            return usuario;
+            if (usuario != null)
+            {
+                _context.Usuarios.Remove(usuario);
+                await _context.SaveChangesAsync();
+            }
         }
         catch (Exception ex)
         {
@@ -67,13 +64,12 @@ public class UsuarioRepository : IUsuarioRepository
         }
     }
 
-    public async Task<Usuario> UpdateUsuario(Usuario usuario)
+    public async Task UpdateUsuario(Usuario usuario)
     {
         try
         {
             _context.Entry(usuario).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return usuario;
         }
         catch (Exception ex)
         {
@@ -81,11 +77,11 @@ public class UsuarioRepository : IUsuarioRepository
         }
     }
 
-    public async Task<Usuario> GetByUsernameAndPassword(string username, string password)
+    public async Task<Usuario> GetByUsername(string username)
     {
         try
         {
-            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Login == username && u.Password == password);
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username);
         }
         catch (Exception ex)
         {

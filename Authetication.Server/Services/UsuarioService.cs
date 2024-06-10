@@ -2,8 +2,7 @@
 using Authetication.Server.Models;
 using Authetication.Server.Repository;
 using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,13 +13,13 @@ namespace Authetication.Server.Services
     {
         private readonly IMapper _mapper;
         private readonly IUsuarioRepository _repository;
-        private readonly IPasswordHasher<Usuario> _passwordHasher;
+        private readonly ILogger<UsuarioService> _logger; // Campo para ILogge
 
-        public UsuarioService(IMapper mapper, IUsuarioRepository repository, IPasswordHasher<Usuario> passwordHasher)
+        public UsuarioService(IMapper mapper, IUsuarioRepository repository, ILogger<UsuarioService> logger)
         {
             _mapper = mapper;
             _repository = repository;
-            _passwordHasher = passwordHasher;
+            _logger = logger;
         }
 
         public async Task CreateUsuario(UsuarioDto usuarioDto)
@@ -28,7 +27,7 @@ namespace Authetication.Server.Services
             try
             {
                 var usuarioEntity = _mapper.Map<Usuario>(usuarioDto);
-                usuarioEntity.Password = _passwordHasher.HashPassword(usuarioEntity, usuarioDto.Password);
+               // usuarioEntity.Password = BCrypt.Net.BCrypt.HashPassword(usuarioDto.Password);
                 await _repository.CreateNewUsuario(usuarioEntity);
                 usuarioDto.IdUser = usuarioEntity.IdUser;
             }
@@ -37,6 +36,7 @@ namespace Authetication.Server.Services
                 throw new Exception(ex.Message);
             }
         }
+
 
         public async Task DeleteUsuario(int id)
         {
@@ -55,8 +55,8 @@ namespace Authetication.Server.Services
         {
             try
             {
-                var usuarioEntity = await _repository.GetAll();
-                return _mapper.Map<IEnumerable<UsuarioDto>>(usuarioEntity);
+                var usuarioEntities = await _repository.GetAll();
+                return _mapper.Map<IEnumerable<UsuarioDto>>(usuarioEntities);
             }
             catch (Exception ex)
             {
@@ -90,17 +90,40 @@ namespace Authetication.Server.Services
             }
         }
 
-        public async Task<UsuarioDto> GetUsuarioByUsernameAndPassword(string username, string password)
+        public async Task<UsuarioDto> GetByUsernameAndPassword(string username, string password)
         {
             try
             {
-                var usuarioEntity = await _repository.GetByUsernameAndPassword(username, password);
-                return _mapper.Map<UsuarioDto>(usuarioEntity);
+                _logger.LogInformation($"Authenticating user: {username}");
+
+                var usuarioEntity = await _repository.GetByUsername(username);
+
+                if (usuarioEntity != null)
+                {
+                    _logger.LogInformation($"User found: {usuarioEntity.Username}");
+
+                    bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, usuarioEntity.Password);
+
+                    _logger.LogInformation($"Password valid: {isPasswordValid}");
+
+                    if (isPasswordValid)
+                    {
+                        return _mapper.Map<UsuarioDto>(usuarioEntity);
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning($"User not found: {username}");
+                }
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                _logger.LogError(ex, $"Error while verifying the password for user: {username}");
+                throw;
             }
+
+            return null;
         }
+
     }
 }

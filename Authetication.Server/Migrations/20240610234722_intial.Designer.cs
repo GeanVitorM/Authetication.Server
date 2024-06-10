@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Authetication.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240606115740_DbAtualizacao")]
-    partial class DbAtualizacao
+    [Migration("20240610234722_intial")]
+    partial class intial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -161,14 +161,6 @@ namespace Authetication.Server.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdUser"));
 
-                    b.Property<string>("Login")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("NameUser")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("Password")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -176,9 +168,13 @@ namespace Authetication.Server.Migrations
                     b.Property<int>("TipoUsuario")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Username")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.HasKey("IdUser");
 
-                    b.HasIndex("Login")
+                    b.HasIndex("Username")
                         .IsUnique();
 
                     b.ToTable("Usuarios");

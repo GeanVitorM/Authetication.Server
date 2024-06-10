@@ -4,41 +4,48 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
-namespace Authetication.Server.Controllers
+namespace Authetication.Server.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class AuthController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthController : ControllerBase
+    private readonly ILogger<AuthController> _logger;
+    private readonly IAuthService _authService;
+
+    public AuthController(ILogger<AuthController> logger, IAuthService authService)
     {
-        private readonly ILogger<AuthController> _logger;
-        private readonly IAuthService _authService;
+        _logger = logger;
+        _authService = authService;
+    }
 
-        public AuthController(ILogger<AuthController> logger, IAuthService authService)
+    [HttpPost("login")]
+    public async Task<ActionResult> Login([FromBody] UsuarioDto loginDto)
+    {
+        if (loginDto == null || string.IsNullOrWhiteSpace(loginDto.Username) || string.IsNullOrWhiteSpace(loginDto.Password))
+            return BadRequest("Invalid username or password");
+
+        try
         {
-            _logger = logger;
-            _authService = authService;
+            _logger.LogInformation($"Attempting login for user: {loginDto.Username}");
+            var token = await _authService.Authenticate(loginDto.Username, loginDto.Password);
+            if (token == null)
+            {
+                _logger.LogWarning($"Login failed for user: {loginDto.Username}");
+                return Unauthorized();
+            }
+
+            string nameUser = loginDto.Username?.Split('@')[0];
+
+            _logger.LogInformation($"Login successful for user: {loginDto.Username}");
+            return Ok(new { Token = token });
         }
-
-        [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] UsuarioDto loginDto)
+        catch (Exception ex)
         {
-            if (loginDto == null)
-                return BadRequest("Invalid client request");
-
-            try
-            {
-                var token = await _authService.Authenticate(loginDto.Login, loginDto.Password);
-                if (token == null)
-                    return Unauthorized();
-
-                return Ok(new { Token = token });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while logging in.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-            }
+            _logger.LogError(ex, "An error occurred while logging in.");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 }

@@ -90,7 +90,8 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false,
+        ValidateIssuer = true,
+        ValidIssuer = configuration["jwt:issuer"], 
         ValidateAudience = false,
         RoleClaimType = "Role"
     };
@@ -101,7 +102,6 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
     options.AddPolicy("CoordenadorPolicy", policy => policy.RequireRole("Admin", "Coordenador"));
     options.AddPolicy("FisioterapeutaPolicy", policy => policy.RequireRole("Admin", "Coordenador", "Fisioterapeuta"));
-    options.AddPolicy("AdminOrCoordenadorPolicy", policy => policy.RequireRole("Admin", "Coordenador"));
     options.AddPolicy("PacientePolicy", policy => policy.RequireRole("Paciente", "Admin"));
 });
 
