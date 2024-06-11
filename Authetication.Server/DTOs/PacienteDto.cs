@@ -28,7 +28,7 @@ public class PacienteDto
     public DateTime DataDeNascimento { get; set; }
 
     [Required(ErrorMessage = "Sexo is required")]
-    public char[] Sexo { get; set; }
+    public char? Sexo { get; set; }
 
     [Required(ErrorMessage = "Proficao is required")]
     public string? Proficao { get; set; }

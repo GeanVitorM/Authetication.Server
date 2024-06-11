@@ -18,8 +18,6 @@ namespace Authetication.Server.Context
         {
             base.OnModelCreating(modelBuilder);
 
-
-
             modelBuilder.Entity<Usuario>()
                 .HasIndex(u => u.Username)
                 .IsUnique();
@@ -42,7 +40,7 @@ namespace Authetication.Server.Context
             modelBuilder.Entity<Paciente>()
                 .HasOne(p => p.Usuario)
                 .WithOne(l => l.Paciente)
-                .HasForeignKey<Paciente>(p => p.IdPaciente);
+                .HasForeignKey<Paciente>(p => p.IdUser);
         }
     }
 }

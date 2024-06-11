@@ -7,123 +7,120 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Authetication.Server.Services
+namespace Authetication.Server.Services;
+
+public class UsuarioService : IUsuarioService
 {
-    public class UsuarioService : IUsuarioService
+    private readonly IMapper _mapper;
+    private readonly IUsuarioRepository _repository;
+    private readonly ILogger<UsuarioService> _logger;
+
+    public UsuarioService(IMapper mapper, IUsuarioRepository repository, ILogger<UsuarioService> logger)
     {
-        private readonly IMapper _mapper;
-        private readonly IUsuarioRepository _repository;
-        private readonly ILogger<UsuarioService> _logger; // Campo para ILogge
+        _mapper = mapper;
+        _repository = repository;
+        _logger = logger;
+    }
 
-        public UsuarioService(IMapper mapper, IUsuarioRepository repository, ILogger<UsuarioService> logger)
+    public async Task CreateUsuario(UsuarioDto usuarioDto)
+    {
+        try
         {
-            _mapper = mapper;
-            _repository = repository;
-            _logger = logger;
+            var usuarioEntity = _mapper.Map<Usuario>(usuarioDto);
+            await _repository.CreateNewUsuario(usuarioEntity);
+            usuarioDto.IdUser = usuarioEntity.IdUser;
         }
-
-        public async Task CreateUsuario(UsuarioDto usuarioDto)
+        catch (Exception ex)
         {
-            try
-            {
-                var usuarioEntity = _mapper.Map<Usuario>(usuarioDto);
-               // usuarioEntity.Password = BCrypt.Net.BCrypt.HashPassword(usuarioDto.Password);
-                await _repository.CreateNewUsuario(usuarioEntity);
-                usuarioDto.IdUser = usuarioEntity.IdUser;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            throw new Exception(ex.Message);
         }
+    }
 
 
-        public async Task DeleteUsuario(int id)
+    public async Task DeleteUsuario(int id)
+    {
+        try
         {
-            try
-            {
-                var usuarioEntity = await _repository.GetById(id);
-                await _repository.DeleteUsuario(usuarioEntity.IdUser);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            var usuarioEntity = await _repository.GetById(id);
+            await _repository.DeleteUsuario(usuarioEntity.IdUser);
         }
-
-        public async Task<IEnumerable<UsuarioDto>> GetAllUsers()
+        catch (Exception ex)
         {
-            try
-            {
-                var usuarioEntities = await _repository.GetAll();
-                return _mapper.Map<IEnumerable<UsuarioDto>>(usuarioEntities);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            throw new Exception(ex.Message);
         }
+    }
 
-        public async Task<UsuarioDto> GetUsuarioById(int id)
+    public async Task<IEnumerable<UsuarioDto>> GetAllUsers()
+    {
+        try
         {
-            try
-            {
-                var usuarioEntity = await _repository.GetById(id);
-                return _mapper.Map<UsuarioDto>(usuarioEntity);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            var usuarioEntities = await _repository.GetAll();
+            return _mapper.Map<IEnumerable<UsuarioDto>>(usuarioEntities);
         }
-
-        public async Task UpdateUsuario(UsuarioDto usuarioDto)
+        catch (Exception ex)
         {
-            try
-            {
-                var usuarioEntity = _mapper.Map<Usuario>(usuarioDto);
-                await _repository.UpdateUsuario(usuarioEntity);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            throw new Exception(ex.Message);
         }
+    }
 
-        public async Task<UsuarioDto> GetByUsernameAndPassword(string username, string password)
+    public async Task<UsuarioDto> GetUsuarioById(int id)
+    {
+        try
         {
-            try
+            var usuarioEntity = await _repository.GetById(id);
+            return _mapper.Map<UsuarioDto>(usuarioEntity);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    public async Task UpdateUsuario(UsuarioDto usuarioDto)
+    {
+        try
+        {
+            var usuarioEntity = _mapper.Map<Usuario>(usuarioDto);
+            await _repository.UpdateUsuario(usuarioEntity);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    public async Task<UsuarioDto> GetByUsernameAndPassword(string username, string password)
+    {
+        try
+        {
+            _logger.LogInformation($"Authenticating user: {username}");
+
+            var usuarioEntity = await _repository.GetByUsername(username);
+
+            if (usuarioEntity != null)
             {
-                _logger.LogInformation($"Authenticating user: {username}");
+                _logger.LogInformation($"User found: {usuarioEntity.Username}");
 
-                var usuarioEntity = await _repository.GetByUsername(username);
+                bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, usuarioEntity.Password);
 
-                if (usuarioEntity != null)
+                _logger.LogInformation($"Password valid: {isPasswordValid}");
+
+                if (isPasswordValid)
                 {
-                    _logger.LogInformation($"User found: {usuarioEntity.Username}");
-
-                    bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, usuarioEntity.Password);
-
-                    _logger.LogInformation($"Password valid: {isPasswordValid}");
-
-                    if (isPasswordValid)
-                    {
-                        return _mapper.Map<UsuarioDto>(usuarioEntity);
-                    }
-                }
-                else
-                {
-                    _logger.LogWarning($"User not found: {username}");
+                    return _mapper.Map<UsuarioDto>(usuarioEntity);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError(ex, $"Error while verifying the password for user: {username}");
-                throw;
+                _logger.LogWarning($"User not found: {username}");
             }
-
-            return null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error while verifying the password for user: {username}");
+            throw;
         }
 
+        return null;
     }
 }

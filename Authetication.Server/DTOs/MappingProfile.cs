@@ -16,10 +16,10 @@ public class MappingProfile : Profile
         CreateMap<CoordenadorDto, Coordenador>();
         CreateMap<Coordenador, CoordenadorDto>();
 
-        CreateMap<PacienteDto, Paciente>();
-        CreateMap<Paciente, PacienteDto>();
-
         CreateMap<UsuarioDto, Usuario>();
         CreateMap<Usuario, UsuarioDto>();
+
+        CreateMap<PacienteDto, Paciente>();
+        CreateMap<Paciente, PacienteDto>();
     }
 }

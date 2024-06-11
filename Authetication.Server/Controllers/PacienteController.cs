@@ -1,4 +1,5 @@
 ﻿using Authetication.Server.DTOs;
+using Authetication.Server.Models;
 using Authetication.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,11 +13,13 @@ public class PacienteController : ControllerBase
 {
     private readonly ILogger<PacienteController> _logger;
     private readonly IPacienteService _service;
+    private readonly IUsuarioService _usuarioService;
 
-    public PacienteController(ILogger<PacienteController> logger, IPacienteService service)
+    public PacienteController(ILogger<PacienteController> logger, IPacienteService service, IAuthService authService, IUsuarioService usuarioService)
     {
         _logger = logger;
         _service = service;
+        _usuarioService = usuarioService;
     }
 
     [HttpGet]
@@ -64,19 +67,32 @@ public class PacienteController : ControllerBase
     public async Task<ActionResult> Post([FromBody] PacienteDto pacienteDto)
     {
         if (pacienteDto == null)
-            return BadRequest("Data Invalid");
+            return BadRequest("Dados inválidos");
 
         try
         {
+            var novoUsuarioDto = new UsuarioDto
+            {
+                Username = pacienteDto.EmailPaciente,
+                Password = "asdf1234",
+                TipoUsuario = TipoUsuario.Paciente
+            };
+
+            await _usuarioService.CreateUsuario(novoUsuarioDto);
+
+            pacienteDto.IdPaciente = novoUsuarioDto.IdUser;
+
             await _service.CreatePaciente(pacienteDto);
-            return new CreatedAtRouteResult("GetPaciente", new { id = pacienteDto.IdPaciente }, pacienteDto);
+
+            return Ok(new { Paciente = pacienteDto, Usuario = novoUsuarioDto });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while creating the user.");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            _logger.LogError(ex, "Ocorreu um erro ao criar o paciente");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
         }
     }
+
 
     [HttpPut()]
     [Authorize(Policy = "PacientePolicy")]

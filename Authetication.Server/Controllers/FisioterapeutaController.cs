@@ -1,4 +1,5 @@
 ﻿using Authetication.Server.DTOs;
+using Authetication.Server.Models;
 using Authetication.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,11 +15,13 @@ public class FisioterapeutaController : ControllerBase
 {
     private readonly ILogger<FisioterapeutaController> _logger;
     private readonly IFisioterapeutaService _service;
+    private readonly IUsuarioService _usuarioService;
 
-    public FisioterapeutaController(ILogger<FisioterapeutaController> logger, IFisioterapeutaService service)
+    public FisioterapeutaController(ILogger<FisioterapeutaController> logger, IFisioterapeutaService service, IUsuarioService usuarioService)
     {
         _logger = logger;
         _service = service;
+        _usuarioService = usuarioService;
     }
 
     [HttpGet]
@@ -66,19 +69,32 @@ public class FisioterapeutaController : ControllerBase
     public async Task<ActionResult> Post([FromBody] FisioterapeutaDto fisioterapeutaDto)
     {
         if (fisioterapeutaDto == null)
-            return BadRequest("Data Invalid");
+            return BadRequest("Dados inválidos");
 
         try
         {
+            var novoUsuarioDto = new UsuarioDto
+            {
+                Username = fisioterapeutaDto.EmailFisio,
+                Password = "asdf1234",
+                TipoUsuario = TipoUsuario.Fisioterapeuta
+            };
+
+            await _usuarioService.CreateUsuario(novoUsuarioDto);
+
+            fisioterapeutaDto.IdFisio = novoUsuarioDto.IdUser;
+
             await _service.CreateFisioterapeuta(fisioterapeutaDto);
-            return new CreatedAtRouteResult("GetFisio", new { id = fisioterapeutaDto.IdFisio }, fisioterapeutaDto);
+
+            return Ok(new { Paciente = fisioterapeutaDto, Usuario = novoUsuarioDto });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while creating the fisioterapeuta.");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            _logger.LogError(ex, "Ocorreu um erro ao criar o paciente");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
         }
     }
+
 
     [HttpPut()]
     [Authorize(Policy = "AdminOrCoordenadorPolicy")]

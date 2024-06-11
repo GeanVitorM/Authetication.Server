@@ -22,6 +22,7 @@ public class Paciente
     public string? EmailPaciente { get; set; }
     public TipoUsuario TipoUsuario { get; set; }
 
+    public int? IdUser { get; set; }
     [ForeignKey("IdUser")]
     public Usuario? Usuario { get; set; }
 }
