@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Authetication.Server.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class AdminController : ControllerBase
 {

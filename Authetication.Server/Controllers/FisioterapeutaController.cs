@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Authetication.Server.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class FisioterapeutaController : ControllerBase
 {
@@ -77,20 +77,17 @@ public class FisioterapeutaController : ControllerBase
             {
                 Username = fisioterapeutaDto.EmailFisio,
                 Password = "asdf1234",
-                TipoUsuario = TipoUsuario.Fisioterapeuta
+                TipoUsuario = TipoUsuario.Fisioterapeuta 
             };
 
             await _usuarioService.CreateUsuario(novoUsuarioDto);
-
             fisioterapeutaDto.IdFisio = novoUsuarioDto.IdUser;
-
             await _service.CreateFisioterapeuta(fisioterapeutaDto);
-
-            return Ok(new { Paciente = fisioterapeutaDto, Usuario = novoUsuarioDto });
+            return Ok(new { Fisioterapeuta = fisioterapeutaDto, Usuario = novoUsuarioDto });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Ocorreu um erro ao criar o paciente");
+            _logger.LogError(ex, "Ocorreu um erro ao criar o Fisioterapeuta");
             return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
         }
     }
@@ -122,12 +119,14 @@ public class FisioterapeutaController : ControllerBase
         try
         {
             var fisioterapeutaDto = await _service.GetFisioById(id);
+            var usuarioDto = await _usuarioService.GetUsuarioById(id);
             if (fisioterapeutaDto == null)
             {
                 return NotFound("Fisioterapeuta not found");
             }
 
             await _service.DeleteFisioterapeuta(id);
+            await _usuarioService.DeleteUsuario(id);
             return Ok(fisioterapeutaDto);
         }
         catch (Exception ex)

@@ -14,13 +14,10 @@ public class Usuario
     [MaxLength(100)]
     public string? Password { get; set; }
 
-    // Adicionando o campo TipoUsuario
     public TipoUsuario TipoUsuario { get; set; }
 
-    // Navegação para as outras entidades
     public Admin? Admin { get; set; }
     public Paciente? Paciente { get; set; }
     public Fisioterapeuta? Fisioterapeuta { get; set; }
     public Coordenador? Coordenador { get; set; }
 }
-

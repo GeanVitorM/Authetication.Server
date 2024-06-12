@@ -96,7 +96,8 @@ namespace Authetication.Server.Migrations
                 name: "Pacientes",
                 columns: table => new
                 {
-                    IdPaciente = table.Column<int>(type: "integer", nullable: false),
+                    IdPaciente = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     NomePaciente = table.Column<string>(type: "text", nullable: true),
                     CPF = table.Column<string>(type: "text", nullable: true),
                     UF = table.Column<string>(type: "text", nullable: true),
@@ -115,12 +116,17 @@ namespace Authetication.Server.Migrations
                 {
                     table.PrimaryKey("PK_Pacientes", x => x.IdPaciente);
                     table.ForeignKey(
-                        name: "FK_Pacientes_Usuarios_IdPaciente",
-                        column: x => x.IdPaciente,
+                        name: "FK_Pacientes_Usuarios_IdUser",
+                        column: x => x.IdUser,
                         principalTable: "Usuarios",
-                        principalColumn: "IdUser",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdUser");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pacientes_IdUser",
+                table: "Pacientes",
+                column: "IdUser",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_Username",

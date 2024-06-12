@@ -1,5 +1,7 @@
 ﻿using Authetication.Server.DTOs;
+using Authetication.Server.Models;
 using Authetication.Server.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,17 +10,21 @@ using System.Threading.Tasks;
 
 namespace Authetication.Server.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class CoordenadorController : ControllerBase
 {
+    private readonly IMapper _mapper;
     private readonly ILogger<CoordenadorController> _logger;
     private readonly ICoordenadorService _service;
+    private readonly IUsuarioService _usuarioService;
 
-    public CoordenadorController(ILogger<CoordenadorController> logger, ICoordenadorService service)
+    public CoordenadorController(IMapper mapper, ILogger<CoordenadorController> logger, ICoordenadorService service, IUsuarioService usuarioService)
     {
         _logger = logger;
+        _mapper = mapper;
         _service = service;
+        _usuarioService = usuarioService;
     }
 
     [HttpGet]
@@ -66,19 +72,30 @@ public class CoordenadorController : ControllerBase
     public async Task<ActionResult> Post([FromBody] CoordenadorDto coordenadorDto)
     {
         if (coordenadorDto == null)
-            return BadRequest("Data Invalid");
+            return BadRequest("Dados inválidos");
 
         try
         {
+            var novoUsuarioDto = new UsuarioDto
+            {
+                Username = coordenadorDto.EmailCoordenador,
+                Password = "asdf1234",
+                TipoUsuario = TipoUsuario.Coordenador
+            };
+
+            await _usuarioService.CreateUsuario(novoUsuarioDto);
+            coordenadorDto.IdCoordenador = novoUsuarioDto.IdUser;
             await _service.CreateCoordenador(coordenadorDto);
-            return new CreatedAtRouteResult("GetCoord", new { id = coordenadorDto.IdCoordenador }, coordenadorDto);
+            return Ok(new { Coordenador = coordenadorDto, Usuario = novoUsuarioDto });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while creating the coordenador.");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            _logger.LogError(ex, "Ocorreu um erro ao criar o Coordenador");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
         }
     }
+
+
 
     [HttpPut()]
     [Authorize(Policy = "AdminPolicy")]
@@ -106,12 +123,14 @@ public class CoordenadorController : ControllerBase
         try
         {
             var coordenadorDto = await _service.GetCoordById(id);
-            if (coordenadorDto == null)
+            var usuarioDto = await _usuarioService.GetUsuarioById(id);
+            if (coordenadorDto == null && usuarioDto == null)
             {
                 return NotFound("Coordenador not found");
             }
 
             await _service.DeleteCoordenador(id);
+            await _usuarioService.DeleteUsuario(id);
             return Ok(coordenadorDto);
         }
         catch (Exception ex)

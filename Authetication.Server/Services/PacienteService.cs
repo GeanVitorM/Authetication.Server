@@ -60,17 +60,12 @@ namespace Authetication.Server.Services
         {
             try
             {
-                var pacienteEntities = await _repository.GetAll();
-                if (pacienteEntities == null || !pacienteEntities.Any())
-                {
-                    throw new Exception("Nenhum paciente encontrado.");
-                }
-                return _mapper.Map<IEnumerable<PacienteDto>>(pacienteEntities);
+                var pacientesEntities = await _repository.GetAll();
+                return _mapper.Map<IEnumerable<PacienteDto>>(pacientesEntities);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao recuperar pacientes.");
-                throw new Exception($"Erro ao recuperar pacientes: {ex.Message}", ex);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -78,12 +73,8 @@ namespace Authetication.Server.Services
         {
             try
             {
-                var pacienteEntity = await _repository.GetById(id);
-                if (pacienteEntity == null)
-                {
-                    throw new Exception("Paciente não encontrado.");
-                }
-                return _mapper.Map<PacienteDto>(pacienteEntity);
+                var pacientesEntities = await _repository.GetById(id);
+                return _mapper.Map<PacienteDto>(pacientesEntities);
             }
             catch (Exception ex)
             {

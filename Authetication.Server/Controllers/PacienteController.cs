@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Authetication.Server.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class PacienteController : ControllerBase
 {
@@ -71,6 +71,8 @@ public class PacienteController : ControllerBase
 
         try
         {
+            await _service.CreatePaciente(pacienteDto);
+
             var novoUsuarioDto = new UsuarioDto
             {
                 Username = pacienteDto.EmailPaciente,
@@ -120,12 +122,14 @@ public class PacienteController : ControllerBase
         try
         {
             var pacienteDto = await _service.GetPacienteById(id);
+            var usuarioDto = await _usuarioService.GetUsuarioById(id);
             if (pacienteDto == null)
             {
                 return NotFound("Paciente not found");
             }
 
             await _service.DeletePaciente(id);
+            await _usuarioService.DeleteUsuario(id);
             return Ok(pacienteDto);
         }
         catch (Exception ex)

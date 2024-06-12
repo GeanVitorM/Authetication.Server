@@ -104,7 +104,10 @@ namespace Authetication.Server.Migrations
             modelBuilder.Entity("Authetication.Server.Models.Paciente", b =>
                 {
                     b.Property<int>("IdPaciente")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdPaciente"));
 
                     b.Property<string>("CPF")
                         .HasColumnType("text");
@@ -146,6 +149,9 @@ namespace Authetication.Server.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("IdPaciente");
+
+                    b.HasIndex("IdUser")
+                        .IsUnique();
 
                     b.ToTable("Pacientes");
                 });
@@ -214,9 +220,7 @@ namespace Authetication.Server.Migrations
                 {
                     b.HasOne("Authetication.Server.Models.Usuario", "Usuario")
                         .WithOne("Paciente")
-                        .HasForeignKey("Authetication.Server.Models.Paciente", "IdPaciente")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Authetication.Server.Models.Paciente", "IdUser");
 
                     b.Navigation("Usuario");
                 });

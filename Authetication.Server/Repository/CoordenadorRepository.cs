@@ -9,8 +9,8 @@ public class CoordenadorRepository : ICoordenadorRepository
     private readonly AppDbContext _context;
     public CoordenadorRepository(AppDbContext context)
     {
-    
-        _context = context ?? throw new ArgumentNullException(nameof(context));
+
+        _context = context;
     }
 
     public async Task<Coordenador> CreateNewCoordenador(Coordenador coordenador)

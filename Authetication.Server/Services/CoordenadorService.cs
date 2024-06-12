@@ -18,9 +18,9 @@ public class CoordenadorService : ICoordenadorService
 
     public CoordenadorService(IMapper mapper, ICoordenadorRepository repository, ILogger<CoordenadorService> logger)
     {
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _mapper = mapper;
+        _repository = repository;
+        _logger = logger;
     }
 
     public async Task CreateCoordenador(CoordenadorDto coordenadorDto)
@@ -43,10 +43,6 @@ public class CoordenadorService : ICoordenadorService
         try
         {
             var coordEntity = await _repository.GetById(id);
-            if (coordEntity == null)
-            {
-                throw new Exception("Coordenador não encontrado.");
-            }
             await _repository.DeleteCoordenador(coordEntity.IdCoordenador);
         }
         catch (Exception ex)
@@ -60,12 +56,8 @@ public class CoordenadorService : ICoordenadorService
     {
         try
         {
-            var coordEntities = await _repository.GetAll();
-            if (coordEntities == null || !coordEntities.Any())
-            {
-                throw new Exception("Nenhum coordenador encontrado.");
-            }
-            return _mapper.Map<IEnumerable<CoordenadorDto>>(coordEntities);
+            var coordEntity = await _repository.GetAll();
+            return _mapper.Map<IEnumerable<CoordenadorDto>>(coordEntity);
         }
         catch (Exception ex)
         {
@@ -79,10 +71,6 @@ public class CoordenadorService : ICoordenadorService
         try
         {
             var coordEntity = await _repository.GetById(id);
-            if (coordEntity == null)
-            {
-                throw new Exception("Coordenador não encontrado.");
-            }
             return _mapper.Map<CoordenadorDto>(coordEntity);
         }
         catch (Exception ex)

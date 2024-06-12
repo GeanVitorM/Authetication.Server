@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Authetication.Server.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
 {

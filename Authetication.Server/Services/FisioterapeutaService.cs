@@ -18,9 +18,9 @@ public class FisioterapeutaService : IFisioterapeutaService
 
     public FisioterapeutaService(IMapper mapper, IFisioterapeutaRepository repository, ILogger<FisioterapeutaService> logger)
     {
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _mapper = mapper;
+        _repository = repository;
+        _logger = logger;
     }
 
     public async Task CreateFisioterapeuta(FisioterapeutaDto fisioterapeutaDto)
@@ -43,10 +43,6 @@ public class FisioterapeutaService : IFisioterapeutaService
         try
         {
             var fisioEntity = await _repository.GetById(id);
-            if (fisioEntity == null)
-            {
-                throw new Exception("Fisioterapeuta não encontrado.");
-            }
             await _repository.DeleteFisioterapeuta(fisioEntity.IdFisio);
         }
         catch (Exception ex)
@@ -61,10 +57,6 @@ public class FisioterapeutaService : IFisioterapeutaService
         try
         {
             var fisioEntities = await _repository.GetAll();
-            if (fisioEntities == null || !fisioEntities.Any())
-            {
-                throw new Exception("Nenhum fisioterapeuta encontrado.");
-            }
             return _mapper.Map<IEnumerable<FisioterapeutaDto>>(fisioEntities);
         }
         catch (Exception ex)
@@ -79,10 +71,6 @@ public class FisioterapeutaService : IFisioterapeutaService
         try
         {
             var fisioEntity = await _repository.GetById(id);
-            if (fisioEntity == null)
-            {
-                throw new Exception("Fisioterapeuta não encontrado.");
-            }
             return _mapper.Map<FisioterapeutaDto>(fisioEntity);
         }
         catch (Exception ex)

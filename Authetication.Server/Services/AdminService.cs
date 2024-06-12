@@ -18,9 +18,9 @@ public class AdminService : IAdminService
 
     public AdminService(IMapper mapper, IAdminRepository repository, ILogger<AdminService> logger)
     {
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _mapper = mapper;
+        _repository = repository;
+        _logger = logger;
     }
 
     public async Task CreateAdmin(AdminDto adminDto)
@@ -43,10 +43,6 @@ public class AdminService : IAdminService
         try
         {
             var adminEntity = await _repository.GetById(id);
-            if (adminEntity == null)
-            {
-                throw new Exception("Administrador não encontrado.");
-            }
             await _repository.DeleteAdmin(adminEntity.IdAdmin);
         }
         catch (Exception ex)
@@ -61,10 +57,6 @@ public class AdminService : IAdminService
         try
         {
             var adminEntity = await _repository.GetById(id);
-            if (adminEntity == null)
-            {
-                throw new Exception("Administrador não encontrado.");
-            }
             return _mapper.Map<AdminDto>(adminEntity);
         }
         catch (Exception ex)
@@ -79,10 +71,6 @@ public class AdminService : IAdminService
         try
         {
             var adminEntities = await _repository.GetAll();
-            if (adminEntities == null || !adminEntities.Any())
-            {
-                throw new Exception("Nenhum administrador encontrado.");
-            }
             return _mapper.Map<IEnumerable<AdminDto>>(adminEntities);
         }
         catch (Exception ex)

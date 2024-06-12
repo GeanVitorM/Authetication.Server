@@ -18,9 +18,16 @@ public class UsuarioRepository : IUsuarioRepository
 
     public async Task CreateNewUsuario(Usuario usuario)
     {
-        usuario.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
-        _context.Usuarios.Add(usuario);
-        await _context.SaveChangesAsync();
+        try
+        {
+             usuario.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
+             _context.Usuarios.Add(usuario);
+             await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     public async Task DeleteUsuario(int id)
