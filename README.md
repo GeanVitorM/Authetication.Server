@@ -3,6 +3,9 @@ Authentication API
 
 Esta API é usada para gerenciar usuários, pacientes, fisioterapeutas, coordenadores e administradores.
 
+![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/dffeb9f1-00f1-4d28-8004-56ab0a1b8275)
+
+
 Endpoints Disponíveis:
 
 /Usuario
