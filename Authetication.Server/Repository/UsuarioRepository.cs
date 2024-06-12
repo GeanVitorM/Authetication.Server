@@ -63,7 +63,8 @@ public class UsuarioRepository : IUsuarioRepository
     {
         try
         {
-            return await _context.Usuarios.FirstOrDefaultAsync(p => p.IdUser == id);
+            var usuarioEntity = await _context.Usuarios.AsNoTracking().FirstOrDefaultAsync(p => p.IdUser == id);
+            return usuarioEntity;
         }
         catch (Exception ex)
         {

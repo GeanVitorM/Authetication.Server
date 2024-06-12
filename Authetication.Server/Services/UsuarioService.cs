@@ -123,4 +123,27 @@ public class UsuarioService : IUsuarioService
 
         return null;
     }
+
+    public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
+    {
+        try
+        {
+            var usuario = await _repository.GetById(userId);
+
+            if (!BCrypt.Net.BCrypt.Verify(oldPassword, usuario.Password))
+            {
+                return false;
+            }
+
+            usuario.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _repository.UpdateUsuario(usuario);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error while changing the password for user with ID: {userId}");
+            throw;
+        }
+    }
 }

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Authetication.Server.Controllers;
 
@@ -14,9 +15,11 @@ public class AuthController : ControllerBase
 {
     private readonly ILogger<AuthController> _logger;
     private readonly IAuthService _authService;
+    private readonly IUsuarioService _usuarioService;
 
-    public AuthController(ILogger<AuthController> logger, IAuthService authService)
+    public AuthController(ILogger<AuthController> logger, IAuthService authService, IUsuarioService usuarioService)
     {
+        _usuarioService = usuarioService;
         _logger = logger;
         _authService = authService;
     }
@@ -48,4 +51,40 @@ public class AuthController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
+
+    [HttpPost("change-password")]
+    public async Task<ActionResult> ChangePassword(int userId, [FromBody] ChangePasswordDto changePasswordDto)
+    {
+        if (changePasswordDto == null || string.IsNullOrWhiteSpace(changePasswordDto.OldPassword) || string.IsNullOrWhiteSpace(changePasswordDto.NewPassword))
+        {
+            return BadRequest("Invalid password data");
+        }
+
+        try
+        {
+            var user = await _usuarioService.GetUsuarioById(userId);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+            bool isOldPasswordValid = BCrypt.Net.BCrypt.Verify(changePasswordDto.OldPassword, user.Password);
+
+            if (!isOldPasswordValid)
+            {
+                return BadRequest("Invalid old password");
+            }
+            string hashedNewPassword = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
+            user.Password = hashedNewPassword;
+            await _usuarioService.UpdateUsuario(user);
+
+            return Ok("Password changed successfully");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while changing the password.");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
+
 }

@@ -40,6 +40,8 @@ builder.Services.AddScoped<IFisioterapeutaService, FisioterapeutaService>();
 builder.Services.AddScoped<ICoordenadorService, CoordenadorService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 builder.Services.AddControllers();
 // Saiba mais sobre a configuração do Swagger/OpenAPI em https://aka.ms/aspnetcore/swashbuckle
