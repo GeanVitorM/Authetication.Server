@@ -19,6 +19,7 @@ public class Paciente
     public string? Proficao { get; set; }
     public string? DiagnosticoClinico { get; set; }
     public string? DiagnosticoFisio { get; set; }
+    public bool PrimeiraConsulta { get; set; } = true;
     public string? EmailPaciente { get; set; }
     public TipoUsuario TipoUsuario { get; set; }
 

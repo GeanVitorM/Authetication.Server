@@ -38,6 +38,7 @@ public class PacienteDto
 
     [Required(ErrorMessage = "Diagnostico is required")]
     public string? DiagnosticoFisio { get; set; }
+    public bool PrimeiraConsulta { get; set; } = true;
 
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "The Email field is not a valid e-mail address.")]

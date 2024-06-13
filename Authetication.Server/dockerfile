@@ -1,0 +1,23 @@
+# Estágio de build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+
+# Copia o projeto .csproj e restaura dependências
+COPY ["Authetication.Server.csproj", "./"]
+RUN dotnet restore "Authetication.Server.csproj"
+
+# Copia todo o código fonte e compila
+COPY . .
+WORKDIR "/src"
+RUN dotnet build "Authetication.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# Estágio de publicação
+FROM build AS publish
+RUN dotnet publish "Authetication.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+# Estágio final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Authetication.Server.dll"]
