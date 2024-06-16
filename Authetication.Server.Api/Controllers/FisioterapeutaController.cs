@@ -1,4 +1,5 @@
 ﻿using Authetication.Server.Api.DTOs;
+using Authetication.Server.Api.Middlewares;
 using Authetication.Server.Api.Models;
 using Authetication.Server.Api.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -16,12 +17,14 @@ public class FisioterapeutaController : ControllerBase
     private readonly ILogger<FisioterapeutaController> _logger;
     private readonly IFisioterapeutaService _service;
     private readonly IUsuarioService _usuarioService;
+    private readonly RandomPassword _randomPassword;
 
-    public FisioterapeutaController(ILogger<FisioterapeutaController> logger, IFisioterapeutaService service, IUsuarioService usuarioService)
+    public FisioterapeutaController(ILogger<FisioterapeutaController> logger, IFisioterapeutaService service, IUsuarioService usuarioService, RandomPassword randomPassword)
     {
         _logger = logger;
         _service = service;
         _usuarioService = usuarioService;
+        _randomPassword = randomPassword;
     }
 
     [HttpGet]
@@ -71,12 +74,14 @@ public class FisioterapeutaController : ControllerBase
         if (fisioterapeutaDto == null)
             return BadRequest("Dados inválidos");
 
+        string senhaAleatoria = _randomPassword.GerarSenhaAleatoria();
+
         try
         {
             var novoUsuarioDto = new UsuarioDto
             {
                 Username = fisioterapeutaDto.EmailFisio,
-                Password = "asdf1234",
+                Password = senhaAleatoria,
                 TipoUsuario = TipoUsuario.Fisioterapeuta 
             };
 

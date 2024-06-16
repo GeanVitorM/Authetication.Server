@@ -4,6 +4,7 @@ using Authetication.Server.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Authetication.Server.Api.Middlewares;
 
 namespace Authetication.Server.Api.Controllers;
 
@@ -14,12 +15,14 @@ public class PacienteController : ControllerBase
     private readonly ILogger<PacienteController> _logger;
     private readonly IPacienteService _service;
     private readonly IUsuarioService _usuarioService;
+    private readonly RandomPassword _randomPassword;
 
-    public PacienteController(ILogger<PacienteController> logger, IPacienteService service, IAuthService authService, IUsuarioService usuarioService)
+    public PacienteController(ILogger<PacienteController> logger, IPacienteService service, IAuthService authService, IUsuarioService usuarioService, RandomPassword randomPassword)
     {
         _logger = logger;
         _service = service;
         _usuarioService = usuarioService;
+        _randomPassword = randomPassword;
     }
 
     [HttpGet]
@@ -69,6 +72,8 @@ public class PacienteController : ControllerBase
         if (pacienteDto == null)
             return BadRequest("Dados inválidos");
 
+        string senhaAleatoria = _randomPassword.GerarSenhaAleatoria();
+
         try
         {
             await _service.CreatePaciente(pacienteDto);
@@ -76,7 +81,7 @@ public class PacienteController : ControllerBase
             var novoUsuarioDto = new UsuarioDto
             {
                 Username = pacienteDto.EmailPaciente,
-                Password = "asdf1234",
+                Password = senhaAleatoria,
                 TipoUsuario = TipoUsuario.Paciente
             };
 
@@ -139,3 +144,4 @@ public class PacienteController : ControllerBase
         }
     }
 }
+

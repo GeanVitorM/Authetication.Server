@@ -20,20 +20,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 
-// Adicionar serviços ao contêiner.
+builder.WebHost.ConfigureKestrel(options =>
+{
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+    options.ListenAnyIP(int.Parse(port));
+});
+
 var connectionDb = configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionDb));
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddLogging();
 
 builder.Services.AddScoped<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
-
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
 builder.Services.AddScoped<IFisioterapeutaRepository, FisioterapeutaRepository>();
 builder.Services.AddScoped<ICoordenadorRepository, CoordenadorRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
-
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IPacienteService, PacienteService>();
 builder.Services.AddScoped<IFisioterapeutaService, FisioterapeutaService>();
@@ -42,9 +45,7 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
-
 builder.Services.AddControllers();
-// Saiba mais sobre a configuração do Swagger/OpenAPI em https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -107,10 +108,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("PacientePolicy", policy => policy.RequireRole("Paciente", "Admin"));
 });
 
-
 var app = builder.Build();
 
-// Configurar o pipeline de solicitação HTTP.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -118,12 +117,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseJwtRoleExtractor();
-
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.Run($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "5000"}");

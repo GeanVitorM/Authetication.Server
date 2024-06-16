@@ -1,4 +1,5 @@
 ﻿using Authetication.Server.Api.DTOs;
+using Authetication.Server.Api.Middlewares;
 using Authetication.Server.Api.Models;
 using Authetication.Server.Api.Services;
 using AutoMapper;
@@ -18,13 +19,15 @@ public class CoordenadorController : ControllerBase
     private readonly ILogger<CoordenadorController> _logger;
     private readonly ICoordenadorService _service;
     private readonly IUsuarioService _usuarioService;
+    private readonly RandomPassword _randomPassword;
 
-    public CoordenadorController(IMapper mapper, ILogger<CoordenadorController> logger, ICoordenadorService service, IUsuarioService usuarioService)
+    public CoordenadorController(IMapper mapper, ILogger<CoordenadorController> logger, ICoordenadorService service, IUsuarioService usuarioService, RandomPassword randomPassword)
     {
         _logger = logger;
         _mapper = mapper;
         _service = service;
         _usuarioService = usuarioService;
+        _randomPassword = randomPassword;
     }
 
     [HttpGet]
@@ -74,12 +77,14 @@ public class CoordenadorController : ControllerBase
         if (coordenadorDto == null)
             return BadRequest("Dados inválidos");
 
+        string senhaAleatoria = _randomPassword.GerarSenhaAleatoria();
+
         try
         {
             var novoUsuarioDto = new UsuarioDto
             {
                 Username = coordenadorDto.EmailCoordenador,
-                Password = "asdf1234",
+                Password = senhaAleatoria,
                 TipoUsuario = TipoUsuario.Coordenador
             };
 

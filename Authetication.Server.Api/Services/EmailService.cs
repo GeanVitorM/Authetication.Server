@@ -1,7 +1,7 @@
 ﻿using SendGrid.Helpers.Mail;
 using SendGrid;
 
-namespace Authetication.Server.Services;
+namespace Authetication.Server.Api.Services;
 
 public class EmailService : IEmailService
 {

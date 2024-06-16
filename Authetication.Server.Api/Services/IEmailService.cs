@@ -1,4 +1,4 @@
-﻿namespace Authetication.Server.Services;
+﻿namespace Authetication.Server.Api.Services;
 
 public interface IEmailService
 {
