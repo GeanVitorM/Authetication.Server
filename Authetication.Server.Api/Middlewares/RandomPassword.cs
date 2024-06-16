@@ -9,7 +9,7 @@ namespace Authetication.Server.Api.Middlewares
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var random = new Random();
-            var senha = new string(Enumerable.Repeat(chars, 8)
+            var senha = new string(Enumerable.Repeat(chars, 16)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
             return senha;
         }

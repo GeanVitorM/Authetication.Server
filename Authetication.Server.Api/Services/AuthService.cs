@@ -115,8 +115,6 @@ public class AuthService : IAuthService
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Issuer"],
             claims: claims,
             expires: DateTime.Now.AddMinutes(120),
             signingCredentials: credentials);

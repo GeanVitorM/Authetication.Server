@@ -29,6 +29,7 @@ builder.WebHost.ConfigureKestrel(options =>
 var connectionDb = configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionDb));
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<RandomPassword>();
 builder.Services.AddLogging();
 
 builder.Services.AddScoped<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
@@ -79,6 +80,15 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder
+            .AllowAnyOrigin() 
+            .AllowAnyMethod() 
+            .AllowAnyHeader());
+});
+
 var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"]);
 builder.Services.AddAuthentication(options =>
 {
@@ -116,6 +126,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowSpecificOrigin");
+
 app.UseJwtRoleExtractor();
 app.UseHttpsRedirection();
 app.UseAuthentication();
@@ -123,4 +135,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "5000"}");
+app.Run($"https://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "5000"}");

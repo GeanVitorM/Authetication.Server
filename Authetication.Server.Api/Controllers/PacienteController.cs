@@ -76,8 +76,6 @@ public class PacienteController : ControllerBase
 
         try
         {
-            await _service.CreatePaciente(pacienteDto);
-
             var novoUsuarioDto = new UsuarioDto
             {
                 Username = pacienteDto.EmailPaciente,
