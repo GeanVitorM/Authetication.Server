@@ -99,6 +99,7 @@ public class AuthService : IAuthService
                 claims.Add(new Claim("Proficao", paciente.Proficao));
                 claims.Add(new Claim("Diagnostico fisio", paciente.DiagnosticoFisio));
                 claims.Add(new Claim("Diagnostico clinico", paciente.DiagnosticoClinico));
+                claims.Add(new Claim("Primeira Consulta?", paciente.PrimeiraConsulta.ToString()));
                 break;
             default:
                 break;
