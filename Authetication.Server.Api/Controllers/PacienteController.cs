@@ -89,7 +89,7 @@ public class PacienteController : ControllerBase
 
             await _service.CreatePaciente(pacienteDto);
 
-            return Ok(new { Paciente = pacienteDto, Usuario = novoUsuarioDto });
+            return Ok(new { Paciente = pacienteDto, Usuario = novoUsuarioDto, Senha = senhaAleatoria });
         }
         catch (Exception ex)
         {
