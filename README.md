@@ -34,6 +34,9 @@ Atualiza um paciente existente.
 #### DELETE
 Deleta um paciente pelo ID.
 
+### PATH
+Atualiza o campo primeira consulta
+
 ### /Fisioterapeuta
 
 #### GET
@@ -292,6 +295,7 @@ Cria um novo paciente no sistema. Este endpoint está disponível para todos, in
   "diagnosticoClinico": "string",
   "diagnosticoFisio": "string",
   "emailPaciente": "TestePaciente@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 4
 }
 ```
@@ -323,6 +327,7 @@ Atualiza os detalhes de um paciente existente. Apenas pacientes autenticados pod
   "sexo": "m",
   "proficao": "Profissão",
   "diagnosticoClinico": "Diagnóstico Clínico",
+  "password" : "passwordTeste",
   "diagnosticoFisio": "Diagnóstico Fisioterapêutico",
   "
 
@@ -420,6 +425,7 @@ Cria um novo fisioterapeuta no sistema. Este endpoint está disponível para tod
   "sexo": "m",
   "formacao": "string",
   "emailFisioterapeuta": "TesteFisio@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 2
 }
 ```
@@ -451,6 +457,7 @@ Atualiza os detalhes de um fisioterapeuta existente. Apenas fisioterapeutas aute
   "sexo": "m",
   "formacao": "Formação",
   "emailFisioterapeuta": "exemplo@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 2
 }
 ```
@@ -544,6 +551,7 @@ Cria um novo coordenador no sistema. Este endpoint está disponível para todos,
   "sexo": "m",
   "formacao": "string",
   "emailCoordenador": "TesteCoord@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 3
 }
 ```
@@ -575,6 +583,7 @@ Atualiza os detalhes de um coordenador existente. Apenas coordenadores autentica
   "sexo": "m",
   "formacao": "Formação",
   "emailCoordenador": "exemplo@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 3
 }
 ```
@@ -670,6 +679,7 @@ Cria um novo administrador no sistema. Este endpoint está disponível para todo
   "sexo": "m",
   "formacao": "string",
   "emailAdministrador": "TesteAdmin@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 1
 }
 ```
@@ -701,6 +711,7 @@ Atualiza os detalhes de um administrador existente. Apenas administradores auten
   "sexo": "m",
   "formacao": "Formação",
   "emailAdministrador": "exemplo@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 1
 }
 ```
@@ -753,6 +764,7 @@ Representa os dados de um paciente no sistema.
   "sexo": "m",
   "profissao": "string",
   "emailPaciente": "TestePaciente@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 4
 }
 ```
@@ -771,6 +783,7 @@ Representa os dados de um fisioterapeuta no sistema.
   "sexo": "m",
   "formacao": "string",
   "emailFisioterapeuta": "TesteFisio@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 2
 }
 ```
@@ -789,6 +802,7 @@ Representa os dados de um coordenador no sistema.
   "sexo": "m",
   "formacao": "string",
   "emailCoordenador": "TesteCoord@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 3
 }
 ```
@@ -807,6 +821,7 @@ Representa os dados de um administrador no sistema.
   "sexo": "m",
   "formacao": "string",
   "emailAdministrador": "TesteAdmin@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 1
 }
 ```
