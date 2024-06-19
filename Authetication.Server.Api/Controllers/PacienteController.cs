@@ -95,7 +95,7 @@ public class PacienteController : ControllerBase
     }
 
     [HttpPatch("{id}/PrimeiraConsulta")]
-    [Authorize(Policy = "PacientePolicy")]
+    [Authorize(Policy = "FisioterapeutaPolicy")]
     public async Task<ActionResult> UpdatePrimeiraConsulta(int id)
     {
         try
