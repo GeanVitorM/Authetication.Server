@@ -329,9 +329,7 @@ Atualiza os detalhes de um paciente existente. Apenas pacientes autenticados pod
   "diagnosticoClinico": "Diagnóstico Clínico",
   "password" : "passwordTeste",
   "diagnosticoFisio": "Diagnóstico Fisioterapêutico",
-  "
-
-emailPaciente": "exemplo@example.com",
+  "emailPaciente": "exemplo@example.com",
   "tipoUsuario": 4
 }
 ```
