@@ -1,268 +1,284 @@
-Documentação Api De autenticação Fisioterapia
-Authentication API
+# Documentação da API de Autenticação para Fisioterapia
 
 Esta API é usada para gerenciar usuários, pacientes, fisioterapeutas, coordenadores e administradores.
 
 ![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/dffeb9f1-00f1-4d28-8004-56ab0a1b8275)
 
+## Endpoints Disponíveis
 
-Endpoints Disponíveis:
+### /Usuario
 
-/Usuario
+#### GET
+Lista todos os usuários.
 
-GET: Lista todos os usuários.
-POST: Cria um novo usuário.
-PUT: Atualiza um usuário existente.
-DELETE: Deleta um usuário pelo ID.
-/Paciente
+#### POST
+Cria um novo usuário.
 
-GET: Lista todos os pacientes.
-POST: Cria um novo paciente.
-PUT: Atualiza um paciente existente.
-DELETE: Deleta um paciente pelo ID.
-/Fisioterapeuta
+#### PUT
+Atualiza um usuário existente.
 
-GET: Lista todos os fisioterapeutas.
-POST: Cria um novo fisioterapeuta.
-PUT: Atualiza um fisioterapeuta existente.
-DELETE: Deleta um fisioterapeuta pelo ID.
-/Coordenador
+#### DELETE
+Deleta um usuário pelo ID.
 
-GET: Lista todos os coordenadores.
-POST: Cria um novo coordenador.
-PUT: Atualiza um coordenador existente.
-DELETE: Deleta um coordenador pelo ID.
-/Admin
+### /Paciente
 
-GET: Lista todos os administradores.
-POST: Cria um novo administrador.
-PUT: Atualiza um administrador existente.
-DELETE: Deleta um administrador pelo ID.
-/Auth/login
+#### GET
+Lista todos os pacientes.
 
-POST: Realiza o login de um usuário.
-Autorização:
+#### POST
+Cria um novo paciente.
 
-Alguns endpoints requerem autorização com base em políticas específicas, como AdminPolicy, FisioterapeutaPolicy, PacientePolicy e AdminOrCoordenadorPolicy.
-Respostas de Erro:
+#### PUT
+Atualiza um paciente existente.
 
-400: Dados inválidos fornecidos na solicitação.
-404: Recurso não encontrado.
-500: Erro interno do servidor.
-Formato dos Dados:
+#### DELETE
+Deleta um paciente pelo ID.
 
-Os dados são enviados e recebidos no formato JSON.
+### /Fisioterapeuta
 
-Formato do JSON de Login:
+#### GET
+Lista todos os fisioterapeutas.
 
-Para fazer uma solicitação de login para a rota /Auth/login, o corpo da solicitação HTTP deve ser um objeto JSON contendo as seguintes propriedades:
+#### POST
+Cria um novo fisioterapeuta.
 
-login (string): O e-mail ou nome de usuário do usuário que está tentando fazer login.
-password (string): A senha correspondente ao login do usuário.
-Exemplo de JSON de Login:
+#### PUT
+Atualiza um fisioterapeuta existente.
 
+#### DELETE
+Deleta um fisioterapeuta pelo ID.
+
+### /Coordenador
+
+#### GET
+Lista todos os coordenadores.
+
+#### POST
+Cria um novo coordenador.
+
+#### PUT
+Atualiza um coordenador existente.
+
+#### DELETE
+Deleta um coordenador pelo ID.
+
+### /Admin
+
+#### GET
+Lista todos os administradores.
+
+#### POST
+Cria um novo administrador.
+
+#### PUT
+Atualiza um administrador existente.
+
+#### DELETE
+Deleta um administrador pelo ID.
+
+### /Auth/login
+
+#### POST
+Realiza o login de um usuário.
+
+#### Formato do JSON de Login
+```json
 {
   "login": "user@example.com",
   "password": "senha123"
 }
+```
 
-Neste exemplo:
-
-O valor da propriedade "login" é "user@example.com", que representa o e-mail do usuário.
-O valor da propriedade "password" é "senha123", que representa a senha do usuário.
-É importante que os dados fornecidos no JSON de login sejam precisos e correspondam às credenciais válidas de um usuário registrado no sistema.
-
-Resposta esperada:
+#### Resposta esperada
 ![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/2991e332-617d-4b7d-8c4d-c331d3b844a6)
 
-Endpoint: Alteração de Senha
-Método HTTP: POST
+## Endpoint: Alteração de Senha
+
+### Método HTTP: POST
 URL: /change-password
-Descrição
+
+#### Descrição
 Este endpoint permite que um usuário autenticado altere sua senha. O usuário deve fornecer a senha atual e a nova senha. O endpoint verifica a validade da senha atual e, se for válida, substitui-a pela nova senha.
 
-Cabeçalhos HTTP
-Content-Type: application/json
-Authorization: Bearer token do usuário autenticado (quando aplicável)
-Parâmetros
-Query Parameter
-userId (int): O ID do usuário cuja senha está sendo alterada. Este parametro deve ser enviado no corpo da requisição.
-Corpo da Requisição (application/json)
+#### Cabeçalhos HTTP
+- Content-Type: application/json
+- Authorization: Bearer token do usuário autenticado (quando aplicável)
 
+#### Parâmetros
+
+##### Query Parameter
+- `userId` (int): O ID do usuário cuja senha está sendo alterada. Este parâmetro deve ser enviado no corpo da requisição.
+
+##### Corpo da Requisição (application/json)
+```json
 {
   "oldPassword": "SenhaAtual123",
   "newPassword": "NovaSenha456"
 }
+```
 
-Controlador: Usuario
-Descrição
-O UsuarioController gerencia operações CRUD (Criar, Ler, Atualizar e Excluir) para usuários no sistema. Além disso, ele manipula a alteração de senha para usuários autenticados.
+## Controlador: Usuario
 
-Endpoint: Obter Todos os Usuários
-Método HTTP: GET
+### Endpoint: Obter Todos os Usuários
+
+#### Método HTTP: GET
 URL: /usuario
-Descrição
+
+#### Descrição
 Obtém uma lista de todos os usuários registrados no sistema. Apenas administradores podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Authorization: Bearer token com política "AdminPolicy"
-Respostas
-200 OK
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "AdminPolicy"
 
-Corpo: Um array de objetos UsuarioDto.
-404 Not Found
+#### Respostas
+- `200 OK`: Um array de objetos UsuarioDto.
+- `404 Not Found`: "Usuarios not found"
+- `500 Internal Server Error`: "Internal server error"
 
-Corpo: "Usuarios not found"
-500 Internal Server Error
+### Endpoint: Obter Usuário por ID
 
-Corpo: "Internal server error"
-Endpoint: Obter Usuário por ID
-Método HTTP: GET
+#### Método HTTP: GET
 URL: /usuario/{id}
-Descrição
+
+#### Descrição
 Obtém os detalhes de um usuário específico com base no ID fornecido. Apenas administradores podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Authorization: Bearer token com política "AdminPolicy"
-Parâmetros
-Path Parameter
-id (int): O ID do usuário a ser recuperado.
-Respostas
-200 OK
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "AdminPolicy"
 
-Corpo: Um objeto UsuarioDto com os detalhes do usuário.
-404 Not Found
+#### Parâmetros
 
-Corpo: "Usuario not found"
-500 Internal Server Error
+##### Path Parameter
+- `id` (int): O ID do usuário a ser recuperado.
 
-Corpo: "Internal server error"
-Endpoint: Criar Novo Usuário
-Método HTTP: POST
+#### Respostas
+- `200 OK`: Um objeto UsuarioDto com os detalhes do usuário.
+- `404 Not Found`: "Usuario not found"
+- `500 Internal Server Error`: "Internal server error"
+
+### Endpoint: Criar Novo Usuário
+
+#### Método HTTP: POST
 URL: /usuario
-Descrição
+
+#### Descrição
 Cria um novo usuário no sistema. Este endpoint está disponível para todos, incluindo usuários anônimos.
 
+#### Corpo da Requisição (application/json)
+```json
 {
   "idUser": 0,
   "username": "user@example.com",
   "password": "string",
   "tipoUsuario": 1
 }
+```
 
-Será criado um usuario com a role corresponente ao tipo do usuario
-Resposta esperada:
+#### Resposta esperada
 ![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/04c9c188-5863-4932-b5d1-3e30f6a02328)
 
-Respostas
-201 Created
+#### Respostas
+- `201 Created`: O objeto UsuarioDto criado.
+- `500 Internal Server Error`: "Internal server error"
 
-Corpo: O objeto UsuarioDto criado.
-500 Internal Server Error
+### Endpoint: Atualizar Usuário
 
-Corpo: "Internal server error"
-
-Endpoint: Atualizar Usuário
-Método HTTP: PUT
+#### Método HTTP: PUT
 URL: /usuario
-Descrição
+
+#### Descrição
 Atualiza os detalhes de um usuário existente. Apenas administradores podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Content-Type: application/json
-Authorization: Bearer token com política "AdminPolicy"
-Corpo da Requisição (application/json)
-Um objeto JSON representando o usuário a ser atualizado.
+#### Cabeçalhos HTTP
+- Content-Type: application/json
+- Authorization: Bearer token com política "AdminPolicy"
 
-json  de exemplo
-
+#### Corpo da Requisição (application/json)
+```json
 {
   "idUser": 10,
   "username": "exemplo@example.com",
   "password": "string",
   "tipoUsuario": 1
 }
+```
 
-Resposta esperada
+#### Resposta esperada
 ![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/31f93193-285c-4db9-b9b9-c06ce8a7d165)
 
-Endpoint: Excluir Usuário
-Método HTTP: DELETE
+### Endpoint: Excluir Usuário
+
+#### Método HTTP: DELETE
 URL: /usuario/{id}
-Descrição
+
+#### Descrição
 Exclui um usuário existente do sistema com base no ID fornecido. Apenas administradores podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Authorization: Bearer token com política "AdminPolicy"
-Parâmetros
-Path Parameter
-id (int): O ID do usuário a ser excluído.
-Respostas
-200 OK
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "AdminPolicy"
 
-Corpo: O objeto UsuarioDto excluído.
-404 Not Found
+#### Parâmetros
 
-Corpo: "Usuario not found"
-500 Internal Server Error
+##### Path Parameter
+- `id` (int): O ID do usuário a ser excluído.
 
-Corpo: "Internal server error"
+#### Respostas
+- `200 OK`: O objeto UsuarioDto excluído.
+- `404 Not Found`: "Usuario not found"
+- `500 Internal Server Error`: "Internal server error"
 
-Controlador: Paciente
-Descrição
-O PacienteController gerencia operações CRUD (Criar, Ler, Atualizar e Excluir) para pacientes no sistema. Os endpoints são protegidos por políticas de autorização que garantem acesso apropriado baseado nos papéis dos usuários.
+## Controlador: Paciente
 
-Endpoint: Obter Todos os Pacientes
-Método HTTP: GET
+### Endpoint: Obter Todos os Pacientes
+
+#### Método HTTP: GET
 URL: /paciente
-Descrição
+
+#### Descrição
 Obtém uma lista de todos os pacientes registrados no sistema. Apenas fisioterapeutas podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Authorization: Bearer token com política "FisioterapeutaPolicy"
-Respostas
-200 OK
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "FisioterapeutaPolicy"
 
-Corpo: Um array de objetos PacienteDto com detalhes dos pacientes.
-404 Not Found
+#### Respostas
+- `200 OK`: Um array de objetos PacienteDto com detalhes dos pacientes.
+- `404 Not Found`: "Pacientes not found"
+- `500 Internal Server Error`: "Internal server error"
 
-Corpo: "Pacientes not found"
-500 Internal Server Error
+### Endpoint: Obter Paciente por ID
 
-Corpo: "Internal server error"
-Endpoint: Obter Paciente por ID
-Método HTTP: GET
+#### Método HTTP: GET
 URL: /paciente/{id}
-Descrição
+
+#### Descrição
 Obtém os detalhes de um paciente específico com base no ID fornecido. Apenas fisioterapeutas podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Authorization: Bearer token com política "FisioterapeutaPolicy"
-Parâmetros
-Path Parameter
-id (int): O ID do paciente a ser recuperado.
-Respostas
-200 OK
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "FisioterapeutaPolicy"
 
-Corpo: Um objeto PacienteDto com os detalhes do paciente.
-404 Not Found
+#### Parâmetros
 
-Corpo: "Pacientes not found"
-500 Internal Server Error
+##### Path Parameter
+- `id` (int): O ID do paciente a ser recuperado.
 
-Corpo: "Internal server error"
-Endpoint: Criar Novo Paciente
-Método HTTP: POST
+#### Respostas
+- `200 OK`: Um objeto PacienteDto com os detalhes do paciente.
+- `404 Not Found`: "Pacientes not found"
+- `500 Internal Server Error`: "Internal server error"
+
+### Endpoint: Criar Novo Paciente
+
+#### Método HTTP: POST
 URL: /paciente
-Descrição
+
+#### Descrição
 Cria um novo paciente no sistema. Este endpoint está disponível para todos, incluindo usuários anônimos. Além disso, cria um novo usuário vinculado ao paciente.
 
-Cabeçalhos HTTP
-Content-Type: application/json
-Corpo da Requisição (application/json)
-Um objeto JSON representando o novo paciente a ser criado.
+#### Cabeçalhos HTTP
+- Content-Type: application/json
 
-Exemplo de json
+#### Corpo da Requisição (application/json)
+```json
 {
   "idPaciente": 0,
   "nomePaciente": "string",
@@ -278,453 +294,519 @@ Exemplo de json
   "emailPaciente": "TestePaciente@example.com",
   "tipoUsuario": 4
 }
+```
 
 ![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/410100fa-e460-41f6-b9b0-d6e5bd510154)
 
-Endpoint: Atualizar Paciente
-Método HTTP: PUT
+### Endpoint: Atualizar Paciente
+
+#### Método HTTP: PUT
 URL: /paciente
-Descrição
+
+#### Descrição
 Atualiza os detalhes de um paciente existente. Apenas pacientes autenticados podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Content-Type: application/json
-Authorization: Bearer token com política "PacientePolicy"
-Corpo da Requisição (application/json)
-Um objeto JSON representando o paciente a ser atualizado.
+#### Cabeçalhos HTTP
+- Content-Type: application/json
+- Authorization: Bearer token com política "PacientePolicy"
 
-![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/2a96c172-06bc-4e53-9a9e-2f074869642e)
+#### Corpo da Requisição (application/json)
+```json
+{
+  "idPaciente": 10,
+  "nomePaciente": "exemplo@example.com",
+  "cpf": "12345678900",
+  "uf": "SP",
+  "endereco": "Rua A, 123",
+  "numeroCasa": "1",
+  "dataDeNascimento": "1990-01-01T00:00:00Z",
+  "sexo": "m",
+  "proficao": "Profissão",
+  "diagnosticoClinico": "Diagnóstico Clínico",
+  "diagnosticoFisio": "Diagnóstico Fisioterapêutico",
+  "
 
-Endpoint: Excluir Paciente
-Método HTTP: DELETE
+emailPaciente": "exemplo@example.com",
+  "tipoUsuario": 4
+}
+```
+
+#### Respostas
+- `200 OK`: O objeto PacienteDto atualizado.
+- `404 Not Found`: "Paciente not found"
+- `500 Internal Server Error`: "Internal server error"
+
+### Endpoint: Excluir Paciente
+
+#### Método HTTP: DELETE
 URL: /paciente/{id}
-Descrição
-Exclui um paciente existente do sistema com base no ID fornecido. Apenas administradores ou coordenadores podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Authorization: Bearer token com política "AdminOrCoordenadorPolicy"
-Parâmetros
-Path Parameter
-id (int): O ID do paciente a ser excluído.
-Respostas
-200 OK
+#### Descrição
+Exclui um paciente existente do sistema com base no ID fornecido. Apenas administradores e fisioterapeutas podem acessar este endpoint.
 
-Corpo: O objeto PacienteDto excluído.
-404 Not Found
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "FisioterapeutaPolicy" ou "AdminPolicy"
 
-Corpo: "Paciente not found"
-500 Internal Server Error
+#### Parâmetros
 
-Corpo: "Internal server error"
+##### Path Parameter
+- `id` (int): O ID do paciente a ser excluído.
 
-Controlador: Fisioterapeuta
-Descrição
-O FisioterapeutaController gerencia operações CRUD (Criar, Ler, Atualizar e Excluir) para fisioterapeutas no sistema. Os endpoints são protegidos por políticas de autorização que garantem acesso apropriado baseado nos papéis dos usuários.
+#### Respostas
+- `200 OK`: O objeto PacienteDto excluído.
+- `404 Not Found`: "Paciente not found"
+- `500 Internal Server Error`: "Internal server error"
 
-Endpoint: Obter Todos os Fisioterapeutas
-Método HTTP: GET
+## Controlador: Fisioterapeuta
+
+### Endpoint: Obter Todos os Fisioterapeutas
+
+#### Método HTTP: GET
 URL: /fisioterapeuta
-Descrição
-Obtém uma lista de todos os fisioterapeutas registrados no sistema. Apenas administradores ou coordenadores podem acessar este endpoint.
-404 Not Found
 
-Corpo: "Fisioterapeutas not found"
-500 Internal Server Error
+#### Descrição
+Obtém uma lista de todos os fisioterapeutas registrados no sistema. Apenas coordenadores e administradores podem acessar este endpoint.
 
-Corpo: "Internal server error"
-Endpoint: Obter Fisioterapeuta por ID
-Método HTTP: GET
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "CoordenadorPolicy" ou "AdminPolicy"
+
+#### Respostas
+- `200 OK`: Um array de objetos FisioterapeutaDto com detalhes dos fisioterapeutas.
+- `404 Not Found`: "Fisioterapeutas not found"
+- `500 Internal Server Error`: "Internal server error"
+
+### Endpoint: Obter Fisioterapeuta por ID
+
+#### Método HTTP: GET
 URL: /fisioterapeuta/{id}
-Descrição
-Obtém os detalhes de um fisioterapeuta específico com base no ID fornecido. Apenas administradores ou coordenadores podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Authorization: Bearer token com política "AdminOrCoordenadorPolicy"
-Parâmetros
-Path Parameter
-id (int): O ID do fisioterapeuta a ser recuperado.
-Respostas
-200 OK
+#### Descrição
+Obtém os detalhes de um fisioterapeuta específico com base no ID fornecido. Apenas coordenadores e administradores podem acessar este endpoint.
 
-Corpo: Um objeto FisioterapeutaDto com os detalhes do fisioterapeuta.
-Exemplo:
-{
-  "idFisio": 1,
-  "nomeFisio": "Jane Doe",
-  "emailFisio": "jane@example.com",
-  "especialidade": "Ortopedia"
-}
-404 Not Found
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "CoordenadorPolicy" ou "AdminPolicy"
 
-Corpo: "Fisioterapeuta not found"
-500 Internal Server Error
+#### Parâmetros
 
-Corpo: "Internal server error"
+##### Path Parameter
+- `id` (int): O ID do fisioterapeuta a ser recuperado.
 
-Endpoint: Criar Novo Fisioterapeuta
-Método HTTP: POST
+#### Respostas
+- `200 OK`: Um objeto FisioterapeutaDto com os detalhes do fisioterapeuta.
+- `404 Not Found`: "Fisioterapeuta not found"
+- `500 Internal Server Error`: "Internal server error"
+
+### Endpoint: Criar Novo Fisioterapeuta
+
+#### Método HTTP: POST
 URL: /fisioterapeuta
-Descrição
-Cria um novo fisioterapeuta no sistema. Apenas administradores ou coordenadores podem acessar este endpoint. Além disso, cria um novo usuário vinculado ao fisioterapeuta.
 
-Cabeçalhos HTTP
-Content-Type: application/json
-Authorization: Bearer token com política "AdminOrCoordenadorPolicy"
-Corpo da Requisição (application/json)
-Um objeto JSON representando o novo fisioterapeuta a ser criado.
-exemplo de json:
+#### Descrição
+Cria um novo fisioterapeuta no sistema. Este endpoint está disponível para todos, incluindo usuários anônimos. Além disso, cria um novo usuário vinculado ao fisioterapeuta.
+
+#### Cabeçalhos HTTP
+- Content-Type: application/json
+
+#### Corpo da Requisição (application/json)
+```json
 {
-  "idFisio": 0,
-  "nomeFisio": "string",
-  "emailFisio": "fisioteste@example.com",
-  "matricula": 0,
-  "semestreFisio": "string",
-  "tipoUsuario": 3
+  "idFisioterapeuta": 0,
+  "nomeFisioterapeuta": "string",
+  "cpf": "string",
+  "uf": "string",
+  "endereco": "string",
+  "numeroCasa": "string",
+  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
+  "sexo": "m",
+  "formacao": "string",
+  "emailFisioterapeuta": "TesteFisio@example.com",
+  "tipoUsuario": 2
 }
-![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/50045733-fc18-4607-a77c-4f40c8a1962a)
+```
 
-Endpoint: Atualizar Fisioterapeuta
-Método HTTP: PUT
+![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/29a0e72d-dfc6-4f7c-8045-e3f7f63f8c0d)
+
+### Endpoint: Atualizar Fisioterapeuta
+
+#### Método HTTP: PUT
 URL: /fisioterapeuta
-Descrição
-Atualiza os detalhes de um fisioterapeuta existente. Apenas administradores ou coordenadores podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Content-Type: application/json
-Authorization: Bearer token com política "AdminOrCoordenadorPolicy"
-Corpo da Requisição (application/json)
-Um objeto JSON representando o fisioterapeuta a ser atualizado.
+#### Descrição
+Atualiza os detalhes de um fisioterapeuta existente. Apenas fisioterapeutas autenticados podem acessar este endpoint.
 
-exemplo de json:
+#### Cabeçalhos HTTP
+- Content-Type: application/json
+- Authorization: Bearer token com política "FisioterapeutaPolicy"
+
+#### Corpo da Requisição (application/json)
+```json
 {
-  "idFisio": 12,
-  "nomeFisio": "string",
-  "emailFisio": "fisioteste@example.com",
-  "matricula": 0,
-  "semestreFisio": "string",
-  "tipoUsuario": 3,
-  "usuario": null
+  "idFisioterapeuta": 10,
+  "nomeFisioterapeuta": "exemplo@example.com",
+  "cpf": "12345678900",
+  "uf": "SP",
+  "endereco": "Rua A, 123",
+  "numeroCasa": "1",
+  "dataDeNascimento": "1990-01-01T00:00:00Z",
+  "sexo": "m",
+  "formacao": "Formação",
+  "emailFisioterapeuta": "exemplo@example.com",
+  "tipoUsuario": 2
 }
+```
 
-![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/83b09fa0-e038-42f2-a77e-83341d428db5)
+#### Respostas
+- `200 OK`: O objeto FisioterapeutaDto atualizado.
+- `404 Not Found`: "Fisioterapeuta not found"
+- `500 Internal Server Error`: "Internal server error"
 
+### Endpoint: Excluir Fisioterapeuta
 
-Aqui está a documentação para os endpoints do controlador FisioterapeutaController. Esta documentação detalha os métodos disponíveis para gerenciamento de fisioterapeutas, incluindo as operações de criação, leitura, atualização e exclusão, com base no código fornecido.
-
-Controlador: Fisioterapeuta
-Descrição
-O FisioterapeutaController gerencia operações CRUD (Criar, Ler, Atualizar e Excluir) para fisioterapeutas no sistema. Os endpoints são protegidos por políticas de autorização que garantem acesso apropriado baseado nos papéis dos usuários.
-
-Endpoint: Obter Todos os Fisioterapeutas
-Método HTTP: GET
-URL: /fisioterapeuta
-Descrição
-Obtém uma lista de todos os fisioterapeutas registrados no sistema. Apenas administradores ou coordenadores podem acessar este endpoint.
-
-Cabeçalhos HTTP
-Authorization: Bearer token com política "AdminOrCoordenadorPolicy"
-Respostas
-200 OK
-
-Corpo: Um array de objetos FisioterapeutaDto com detalhes dos fisioterapeutas.
-Exemplo:
-json
-Copiar código
-[
-  {
-    "idFisio": 1,
-    "nomeFisio": "Jane Doe",
-    "emailFisio": "jane@example.com",
-    "especialidade": "Ortopedia"
-  },
-  {
-    "idFisio": 2,
-    "nomeFisio": "John Smith",
-    "emailFisio": "john@example.com",
-    "especialidade": "Neurologia"
-  }
-]
-404 Not Found
-
-Corpo: "Fisioterapeutas not found"
-500 Internal Server Error
-
-Corpo: "Internal server error"
-Endpoint: Obter Fisioterapeuta por ID
-Método HTTP: GET
+#### Método HTTP: DELETE
 URL: /fisioterapeuta/{id}
-Descrição
-Obtém os detalhes de um fisioterapeuta específico com base no ID fornecido. Apenas administradores ou coordenadores podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Authorization: Bearer token com política "AdminOrCoordenadorPolicy"
-Parâmetros
-Path Parameter
-id (int): O ID do fisioterapeuta a ser recuperado.
-Respostas
-200 OK
+#### Descrição
+Exclui um fisioterapeuta existente do sistema com base no ID fornecido. Apenas coordenadores e administradores podem acessar este endpoint.
 
-Corpo: Um objeto FisioterapeutaDto com os detalhes do fisioterapeuta.
-Exemplo:
-json
-Copiar código
-{
-  "idFisio": 1,
-  "nomeFisio": "Jane Doe",
-  "emailFisio": "jane@example.com",
-  "especialidade": "Ortopedia"
-}
-404 Not Found
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "CoordenadorPolicy" ou "AdminPolicy"
 
-Corpo: "Fisioterapeuta not found"
-500 Internal Server Error
+#### Parâmetros
 
-Corpo: "Internal server error"
-Endpoint: Criar Novo Fisioterapeuta
-Método HTTP: POST
-URL: /fisioterapeuta
-Descrição
-Cria um novo fisioterapeuta no sistema. Apenas administradores ou coordenadores podem acessar este endpoint. Além disso, cria um novo usuário vinculado ao fisioterapeuta.
+##### Path Parameter
+- `id` (int): O ID do fisioterapeuta a ser excluído.
 
-Cabeçalhos HTTP
-Content-Type: application/json
-Authorization: Bearer token com política "AdminOrCoordenadorPolicy"
-Corpo da Requisição (application/json)
-Um objeto JSON representando o novo fisioterapeuta a ser criado.
+#### Respostas
+- `200 OK`: O objeto FisioterapeutaDto excluído.
+- `404 Not Found`: "Fisioterapeuta not found"
+- `500 Internal Server Error`: "Internal server error"
 
-Campo	Tipo	Obrigatório	Descrição
-nomeFisio	string	Sim	Nome do fisioterapeuta
-emailFisio	string	Sim	Email do fisioterapeuta
-especialidade	string	Sim	Especialidade
-Exemplo de Corpo da Requisição
-json
-Copiar código
-{
-  "nomeFisio": "Jane Doe",
-  "emailFisio": "jane@example.com",
-  "especialidade": "Ortopedia"
-}
-Respostas
-200 OK
+## Controlador: Coordenador
 
-Corpo: Um objeto JSON com detalhes do fisioterapeuta criado e do usuário vinculado.
-Exemplo:
-json
-Copiar código
-{
-  "Fisioterapeuta": {
-    "idFisio": 1,
-    "nomeFisio": "Jane Doe",
-    "emailFisio": "jane@example.com",
-    "especialidade": "Ortopedia"
-  },
-  "Usuario": {
-    "IdUser": 1,
-    "Username": "jane@example.com",
-    "TipoUsuario": 3
-  }
-}
-400 Bad Request
+### Endpoint: Obter Todos os Coordenadores
 
-Corpo: "Dados inválidos"
-500 Internal Server Error
-
-Corpo: "Erro interno do servidor"
-Endpoint: Atualizar Fisioterapeuta
-Método HTTP: PUT
-URL: /fisioterapeuta
-Descrição
-Atualiza os detalhes de um fisioterapeuta existente. Apenas administradores ou coordenadores podem acessar este endpoint.
-
-Cabeçalhos HTTP
-Content-Type: application/json
-Authorization: Bearer token com política "AdminOrCoordenadorPolicy"
-Corpo da Requisição (application/json)
-Um objeto JSON representando o fisioterapeuta a ser atualizado.
-
-Campo	Tipo	Obrigatório	Descrição
-idFisio	int	Sim	ID do fisioterapeuta
-nomeFisio	string	Sim	Nome do fisioterapeuta
-emailFisio	string	Sim	Email do fisioterapeuta
-especialidade	string	Sim	Especialidade
-Exemplo de Corpo da Requisição
-json
-Copiar código
-{
-  "idFisio": 1,
-  "nomeFisio": "Jane Doe",
-  "emailFisio": "jane@example.com",
-  "especialidade": "Ortopedia"
-}
-Respostas
-200 OK
-
-Corpo: O objeto FisioterapeutaDto atualizado.
-400 Bad Request
-
-Corpo: "Data invalid"
-500 Internal Server Error
-
-Corpo: "Internal server error"
-Endpoint: Excluir Fisioterapeuta
-Método HTTP: DELETE
-URL: /fisioterapeuta/{id}
-Descrição
-Exclui um fisioterapeuta existente do sistema com base no ID fornecido. Apenas administradores ou coordenadores podem acessar este endpoint.
-
-Cabeçalhos HTTP
-Authorization: Bearer token com política "AdminOrCoordenadorPolicy"
-Parâmetros
-Path Parameter
-id (int): O ID do fisioterapeuta a ser excluído.
-Respostas
-200 OK
-
-Corpo: O objeto FisioterapeutaDto excluído.
-Exemplo:
-json
-{
-  "idFisio": 1,
-  "nomeFisio": "Jane Doe",
-  "emailFisio": "jane@example.com",
-  "especialidade": "Ortopedia"
-}
-404 Not Found
-
-Corpo: "Fisioterapeuta not found"
-500 Internal Server Error
-
-Corpo: "Internal server error"
-
-Controlador: Coordenador
-Descrição
-O CoordenadorController gerencia operações CRUD (Criar, Ler, Atualizar e Excluir) para coordenadores no sistema. Todos os endpoints são protegidos por políticas de autorização que garantem acesso apropriado com base nos papéis dos usuários.
-
-Endpoint: Obter Todos os Coordenadores
-Método HTTP: GET
+#### Método HTTP: GET
 URL: /coordenador
-Descrição
+
+#### Descrição
 Obtém uma lista de todos os coordenadores registrados no sistema. Apenas administradores podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Authorization: Bearer token com política "AdminPolicy"
-Respostas
-200 OK
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "AdminPolicy"
 
-Corpo: Um array de objetos CoordenadorDto com detalhes dos coordenadores.
-Exemplo:
-json
-[
-  {
-    "idCoordenador": 1,
-    "nomeCoordenador": "Alice",
-    "emailCoordenador": "alice@example.com",
-    "departamento": "Fisioterapia"
-  },
-  {
-    "idCoordenador": 2,
-    "nomeCoordenador": "Bob",
-    "emailCoordenador": "bob@example.com",
-    "departamento": "Ortopedia"
-  }
-]
-404 Not Found
+#### Respostas
+- `200 OK`: Um array de objetos CoordenadorDto com detalhes dos coordenadores.
+- `404 Not Found`: "Coordenadores not found"
+- `500 Internal Server Error`: "Internal server error"
 
-Corpo: "Coordenadores not found"
-500 Internal Server Error
+### Endpoint: Obter Coordenador por ID
 
-Corpo: "Internal server error"
-
-Endpoint: Obter Coordenador por ID
-Método HTTP: GET
+#### Método HTTP: GET
 URL: /coordenador/{id}
-Descrição
+
+#### Descrição
 Obtém os detalhes de um coordenador específico com base no ID fornecido. Apenas administradores podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Authorization: Bearer token com política "AdminPolicy"
-Parâmetros
-Path Parameter
-id (int): O ID do coordenador a ser recuperado.
-Respostas
-200 OK
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "AdminPolicy"
 
-Corpo: Um objeto CoordenadorDto com os detalhes do coordenador.
-Exemplo:
-json
-{
-  "idCoordenador": 1,
-  "nomeCoordenador": "Alice",
-  "emailCoordenador": "alice@example.com",
-  "departamento": "Fisioterapia"
-}
-404 Not Found
+#### Parâmetros
 
-Corpo: "Coordenador not found"
-500 Internal Server Error
+##### Path Parameter
+- `id` (int): O ID do coordenador a ser recuperado.
 
-Corpo: "Internal server error"
-Endpoint: Criar Novo Coordenador
-Método HTTP: POST
+#### Respostas
+- `200 OK`: Um objeto CoordenadorDto com os detalhes do coordenador.
+- `404 Not Found`: "Coordenador not found"
+- `500 Internal Server Error`: "Internal server error"
+
+### Endpoint: Criar Novo Coordenador
+
+#### Método HTTP: POST
 URL: /coordenador
-Descrição
-Cria um novo coordenador no sistema. Apenas administradores podem acessar este endpoint. Além disso, cria um novo usuário vinculado ao coordenador.
 
-Cabeçalhos HTTP
-Content-Type: application/json
-Authorization: Bearer token com política "AdminPolicy"
-Corpo da Requisição (application/json)
-Um objeto JSON representando o novo coordenador a ser criado.
+#### Descrição
+Cria um novo coordenador no sistema. Este endpoint está disponível para todos, incluindo usuários anônimos. Além disso, cria um novo usuário vinculado ao coordenador.
 
+#### Cabeçalhos HTTP
+- Content-Type: application/json
+
+#### Corpo da Requisição (application/json)
+```json
 {
   "idCoordenador": 0,
   "nomeCoordenador": "string",
-  "emailCoordenador": "coordteste@example.com",
-  "tipoUsuario": 2
+  "cpf": "string",
+  "uf": "string",
+  "endereco": "string",
+  "numeroCasa": "string",
+  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
+  "sexo": "m",
+  "formacao": "string",
+  "emailCoordenador": "TesteCoord@example.com",
+  "tipoUsuario": 3
 }
+```
 
-![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/671f36ad-1cfd-4b84-b780-fb58898731a1)
+![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/3a56cfe6-7f1a-4b25-8128-3c4eb67e7b49)
 
-Endpoint: Atualizar Coordenador
-Método HTTP: PUT
+### Endpoint: Atualizar Coordenador
+
+#### Método HTTP: PUT
 URL: /coordenador
-Descrição
-Atualiza os detalhes de um coordenador existente. Apenas administradores podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Content-Type: application/json
-Authorization: Bearer token com política "AdminPolicy"
-Corpo da Requisição (application/json)
-Um objeto JSON representando o coordenador a ser atualizado.
+#### Descrição
+Atualiza os detalhes de um coordenador existente. Apenas coordenadores autenticados podem acessar este endpoint.
 
-![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/30e438e0-5523-4835-a5ea-2885736ca6c5)
-Endpoint: Excluir Coordenador
-Método HTTP: DELETE
+#### Cabeçalhos HTTP
+- Content-Type: application/json
+- Authorization: Bearer token com política "CoordenadorPolicy"
+
+#### Corpo da Requisição (application/json)
+```json
+{
+  "idCoordenador": 10,
+  "nomeCoordenador": "exemplo@example.com",
+  "cpf": "12345678900",
+  "uf": "SP",
+  "endereco": "Rua A, 123",
+  "numeroCasa": "1",
+  "dataDeNascimento": "1990-01-01T00:00:00Z",
+  "sexo": "m",
+  "formacao": "Formação",
+  "emailCoordenador": "exemplo@example.com",
+  "tipoUsuario": 3
+}
+```
+
+#### Respostas
+- `200 OK`: O objeto CoordenadorDto atualizado.
+- `404 Not Found`: "Coordenador not found"
+- `500 Internal Server Error`: "Internal server error"
+
+### Endpoint: Excluir Coordenador
+
+#### Método HTTP: DELETE
 URL: /coordenador/{id}
-Descrição
+
+#### Descrição
 Exclui um coordenador existente do sistema com base no ID fornecido. Apenas administradores podem acessar este endpoint.
 
-Cabeçalhos HTTP
-Authorization: Bearer token com política "AdminPolicy"
-Parâmetros
-Path Parameter
-id (int): O ID do coordenador a ser excluído.
-Respostas
-200 OK
+#### Cabeçalhos HTTP
+- Authorization: Bearer token
 
-Corpo: O objeto CoordenadorDto excluído.
-Exemplo:
-json
+ com política "AdminPolicy"
+
+#### Parâmetros
+
+##### Path Parameter
+- `id` (int): O ID do coordenador a ser excluído.
+
+#### Respostas
+- `200 OK`: O objeto CoordenadorDto excluído.
+- `404 Not Found`: "Coordenador not found"
+- `500 Internal Server Error`: "Internal server error"
+
+## Controlador: Administrador
+
+### Endpoint: Obter Todos os Administradores
+
+#### Método HTTP: GET
+URL: /administrador
+
+#### Descrição
+Obtém uma lista de todos os administradores registrados no sistema. Apenas outros administradores podem acessar este endpoint.
+
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "AdminPolicy"
+
+#### Respostas
+- `200 OK`: Um array de objetos AdministradorDto com detalhes dos administradores.
+- `404 Not Found`: "Administradores not found"
+- `500 Internal Server Error`: "Internal server error"
+
+### Endpoint: Obter Administrador por ID
+
+#### Método HTTP: GET
+URL: /administrador/{id}
+
+#### Descrição
+Obtém os detalhes de um administrador específico com base no ID fornecido. Apenas outros administradores podem acessar este endpoint.
+
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "AdminPolicy"
+
+#### Parâmetros
+
+##### Path Parameter
+- `id` (int): O ID do administrador a ser recuperado.
+
+#### Respostas
+- `200 OK`: Um objeto AdministradorDto com os detalhes do administrador.
+- `404 Not Found`: "Administrador not found"
+- `500 Internal Server Error`: "Internal server error"
+
+### Endpoint: Criar Novo Administrador
+
+#### Método HTTP: POST
+URL: /administrador
+
+#### Descrição
+Cria um novo administrador no sistema. Este endpoint está disponível para todos, incluindo usuários anônimos. Além disso, cria um novo usuário vinculado ao administrador.
+
+#### Cabeçalhos HTTP
+- Content-Type: application/json
+
+#### Corpo da Requisição (application/json)
+```json
 {
-  "idCoordenador": 1,
-  "nomeCoordenador": "Alice",
-  "emailCoordenador": "alice@example.com",
-  "departamento": "Fisioterapia"
+  "idAdministrador": 0,
+  "nomeAdministrador": "string",
+  "cpf": "string",
+  "uf": "string",
+  "endereco": "string",
+  "numeroCasa": "string",
+  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
+  "sexo": "m",
+  "formacao": "string",
+  "emailAdministrador": "TesteAdmin@example.com",
+  "tipoUsuario": 1
 }
-404 Not Found
+```
 
-Corpo: "Coordenador not found"
-500 Internal Server Error
+![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/60d6efb1-3946-4df0-9780-46be01df1fd1)
 
-Corpo: "Internal server error"
+### Endpoint: Atualizar Administrador
 
+#### Método HTTP: PUT
+URL: /administrador
+
+#### Descrição
+Atualiza os detalhes de um administrador existente. Apenas administradores autenticados podem acessar este endpoint.
+
+#### Cabeçalhos HTTP
+- Content-Type: application/json
+- Authorization: Bearer token com política "AdminPolicy"
+
+#### Corpo da Requisição (application/json)
+```json
+{
+  "idAdministrador": 10,
+  "nomeAdministrador": "exemplo@example.com",
+  "cpf": "12345678900",
+  "uf": "SP",
+  "endereco": "Rua A, 123",
+  "numeroCasa": "1",
+  "dataDeNascimento": "1990-01-01T00:00:00Z",
+  "sexo": "m",
+  "formacao": "Formação",
+  "emailAdministrador": "exemplo@example.com",
+  "tipoUsuario": 1
+}
+```
+
+#### Respostas
+- `200 OK`: O objeto AdministradorDto atualizado.
+- `404 Not Found`: "Administrador not found"
+- `500 Internal Server Error`: "Internal server error"
+
+### Endpoint: Excluir Administrador
+
+#### Método HTTP: DELETE
+URL: /administrador/{id}
+
+#### Descrição
+Exclui um administrador existente do sistema com base no ID fornecido. Apenas outros administradores podem acessar este endpoint.
+
+#### Cabeçalhos HTTP
+- Authorization: Bearer token com política "AdminPolicy"
+
+#### Parâmetros
+
+##### Path Parameter
+- `id` (int): O ID do administrador a ser excluído.
+
+#### Respostas
+- `200 OK`: O objeto AdministradorDto excluído.
+- `404 Not Found`: "Administrador not found"
+- `500 Internal Server Error`: "Internal server error"
+
+## Políticas de Autorização
+
+- `AdminPolicy`: Permite acesso a usuários do tipo administrador.
+- `CoordenadorPolicy`: Permite acesso a usuários do tipo coordenador.
+- `FisioterapeutaPolicy`: Permite acesso a usuários do tipo fisioterapeuta.
+
+# Models
+
+## PacienteDto
+Representa os dados de um paciente no sistema.
+```json
+{
+  "idPaciente": 0,
+  "nomePaciente": "string",
+  "cpf": "string",
+  "uf": "string",
+  "endereco": "string",
+  "numeroCasa": "string",
+  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
+  "sexo": "m",
+  "profissao": "string",
+  "emailPaciente": "TestePaciente@example.com",
+  "tipoUsuario": 4
+}
+```
+
+## FisioterapeutaDto
+Representa os dados de um fisioterapeuta no sistema.
+```json
+{
+  "idFisioterapeuta": 0,
+  "nomeFisioterapeuta": "string",
+  "cpf": "string",
+  "uf": "string",
+  "endereco": "string",
+  "numeroCasa": "string",
+  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
+  "sexo": "m",
+  "formacao": "string",
+  "emailFisioterapeuta": "TesteFisio@example.com",
+  "tipoUsuario": 2
+}
+```
+
+## CoordenadorDto
+Representa os dados de um coordenador no sistema.
+```json
+{
+  "idCoordenador": 0,
+  "nomeCoordenador": "string",
+  "cpf": "string",
+  "uf": "string",
+  "endereco": "string",
+  "numeroCasa": "string",
+  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
+  "sexo": "m",
+  "formacao": "string",
+  "emailCoordenador": "TesteCoord@example.com",
+  "tipoUsuario": 3
+}
+```
+
+## AdministradorDto
+Representa os dados de um administrador no sistema.
+```json
+{
+  "idAdministrador": 0,
+  "nomeAdministrador": "string",
+  "cpf": "string",
+  "uf": "string",
+  "endereco": "string",
+  "numeroCasa": "string",
+  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
+  "sexo": "m",
+  "formacao": "string",
+  "emailAdministrador": "TesteAdmin@example.com",
+  "tipoUsuario": 1
+}
+```
