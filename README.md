@@ -776,3 +776,14 @@ Representa os dados de um administrador no sistema.
   "tipoUsuario": 1
 }
 ```
+
+## UsuarioDto
+Representa os dados de um Usuario no sistema.
+```json
+{
+  "idUser": 0,
+  "username": "admin@example.com",
+  "password": "string",
+  "tipoUsuario": 1
+}
+```
