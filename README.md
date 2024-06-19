@@ -775,13 +775,8 @@ Representa os dados de um fisioterapeuta no sistema.
 {
   "idFisioterapeuta": 0,
   "nomeFisioterapeuta": "string",
-  "cpf": "string",
-  "uf": "string",
-  "endereco": "string",
-  "numeroCasa": "string",
-  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
-  "sexo": "m",
-  "formacao": "string",
+  "Semestre": "string",
+  "matricula": "string",
   "emailFisioterapeuta": "TesteFisio@example.com",
   "password" : "passwordTeste",
   "tipoUsuario": 2
@@ -794,13 +789,6 @@ Representa os dados de um coordenador no sistema.
 {
   "idCoordenador": 0,
   "nomeCoordenador": "string",
-  "cpf": "string",
-  "uf": "string",
-  "endereco": "string",
-  "numeroCasa": "string",
-  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
-  "sexo": "m",
-  "formacao": "string",
   "emailCoordenador": "TesteCoord@example.com",
   "password" : "passwordTeste",
   "tipoUsuario": 3
@@ -813,13 +801,6 @@ Representa os dados de um administrador no sistema.
 {
   "idAdministrador": 0,
   "nomeAdministrador": "string",
-  "cpf": "string",
-  "uf": "string",
-  "endereco": "string",
-  "numeroCasa": "string",
-  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
-  "sexo": "m",
-  "formacao": "string",
   "emailAdministrador": "TesteAdmin@example.com",
   "password" : "passwordTeste",
   "tipoUsuario": 1
