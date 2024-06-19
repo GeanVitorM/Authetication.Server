@@ -17,6 +17,7 @@ public class AdminDto
     public string? EmailAdmin { get; set; }
 
     [Required(ErrorMessage = "Password is required")]
+    public string? Password { get; set; }
     public TipoUsuario TipoUsuario { get; set; }
 
     [ForeignKey("IdUser")]

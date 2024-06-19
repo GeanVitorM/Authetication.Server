@@ -43,6 +43,9 @@ public class PacienteDto
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "The Email field is not a valid e-mail address.")]
     public string? EmailPaciente { get; set; }
+
+    [Required(ErrorMessage = "Password is required")]
+    public string? Password { get; set; }
     public TipoUsuario TipoUsuario { get; set; }
 
     [ForeignKey("IdUser")]

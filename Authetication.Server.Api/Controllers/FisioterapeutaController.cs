@@ -74,14 +74,12 @@ public class FisioterapeutaController : ControllerBase
         if (fisioterapeutaDto == null)
             return BadRequest("Dados inválidos");
 
-        string senhaAleatoria = _randomPassword.GerarSenhaAleatoria();
-
         try
         {
             var novoUsuarioDto = new UsuarioDto
             {
                 Username = fisioterapeutaDto.EmailFisio,
-                Password = senhaAleatoria,
+                Password = fisioterapeutaDto.Password,
                 TipoUsuario = TipoUsuario.Fisioterapeuta 
             };
 

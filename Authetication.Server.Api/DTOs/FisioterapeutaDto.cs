@@ -23,6 +23,7 @@ public class FisioterapeutaDto
     public string? SemestreFisio { get; set; }
 
     [Required(ErrorMessage = "Password is required")]
+    public string? Password { get; set; }
 
     public TipoUsuario TipoUsuario { get; set; }
 

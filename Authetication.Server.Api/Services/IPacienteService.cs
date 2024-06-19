@@ -8,5 +8,6 @@ public interface IPacienteService
     Task<PacienteDto> GetPacienteById(int id);
     Task CreatePaciente(PacienteDto pacienteDto);
     Task UpdatePaciente(PacienteDto pacienteDto);
+    Task UpdatePrimeiraConsulta(PacienteDto pacienteDto);
     Task DeletePaciente(int id);
 }

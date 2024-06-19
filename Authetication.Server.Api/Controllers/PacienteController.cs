@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Authetication.Server.Api.Middlewares;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Authetication.Server.Api.Controllers;
 
@@ -72,29 +73,48 @@ public class PacienteController : ControllerBase
         if (pacienteDto == null)
             return BadRequest("Dados inválidos");
 
-        string senhaAleatoria = _randomPassword.GerarSenhaAleatoria();
-
         try
         {
             var novoUsuarioDto = new UsuarioDto
             {
                 Username = pacienteDto.EmailPaciente,
-                Password = senhaAleatoria,
+                Password = pacienteDto.Password,
                 TipoUsuario = TipoUsuario.Paciente
             };
 
             await _usuarioService.CreateUsuario(novoUsuarioDto);
-
             pacienteDto.IdPaciente = novoUsuarioDto.IdUser;
-
             await _service.CreatePaciente(pacienteDto);
-
-            return Ok(new { Paciente = pacienteDto, Usuario = novoUsuarioDto, Senha = senhaAleatoria });
+            return Ok(new { Paciente = pacienteDto, Usuario = novoUsuarioDto });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Ocorreu um erro ao criar o paciente");
+            _logger.LogError(ex, "Ocorreu um erro ao criar o Paciente");
             return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
+        }
+    }
+
+    [HttpPatch("{id}/PrimeiraConsulta")]
+    [Authorize(Policy = "PacientePolicy")]
+    public async Task<ActionResult> UpdatePrimeiraConsulta(int id)
+    {
+        try
+        {
+            var pacienteDto = await _service.GetPacienteById(id);
+            if (pacienteDto == null)
+            {
+                return NotFound("Paciente not found");
+            }
+
+            pacienteDto.PrimeiraConsulta = false;
+            await _service.UpdatePrimeiraConsulta(pacienteDto);
+
+            return Ok(pacienteDto);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"An error occurred while updating the 'PrimeiraConsulta' field for user with ID {id}.");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 

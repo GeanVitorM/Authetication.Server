@@ -77,14 +77,12 @@ public class CoordenadorController : ControllerBase
         if (coordenadorDto == null)
             return BadRequest("Dados inválidos");
 
-        string senhaAleatoria = _randomPassword.GerarSenhaAleatoria();
-
         try
         {
             var novoUsuarioDto = new UsuarioDto
             {
                 Username = coordenadorDto.EmailCoordenador,
-                Password = senhaAleatoria,
+                Password = coordenadorDto.Password,
                 TipoUsuario = TipoUsuario.Coordenador
             };
 

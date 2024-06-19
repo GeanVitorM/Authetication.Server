@@ -18,9 +18,9 @@ namespace Authetication.Server.Api.Services
 
         public PacienteService(IMapper mapper, IPacienteRepository repository, ILogger<PacienteService> logger)
         {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper;
+            _repository = repository;
+            _logger = logger;
         }
 
         public async Task CreatePaciente(PacienteDto pacienteDto)
@@ -94,6 +94,25 @@ namespace Authetication.Server.Api.Services
             {
                 _logger.LogError(ex, "Erro ao atualizar paciente.");
                 throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task UpdatePrimeiraConsulta(PacienteDto pacienteDto)
+        {
+            try
+            {
+                var paciente = await _repository.GetById(pacienteDto.IdPaciente);
+                if (paciente == null)
+                {
+                    throw new Exception("Paciente not found");
+                }
+
+                paciente.PrimeiraConsulta = pacienteDto.PrimeiraConsulta;
+                await _repository.UpdatePaciente(paciente);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }
