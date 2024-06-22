@@ -34,6 +34,9 @@ Atualiza um paciente existente.
 #### DELETE
 Deleta um paciente pelo ID.
 
+### PATH
+Atualiza o campo primeira consulta
+
 ### /Fisioterapeuta
 
 #### GET
@@ -292,6 +295,7 @@ Cria um novo paciente no sistema. Este endpoint está disponível para todos, in
   "diagnosticoClinico": "string",
   "diagnosticoFisio": "string",
   "emailPaciente": "TestePaciente@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 4
 }
 ```
@@ -323,10 +327,9 @@ Atualiza os detalhes de um paciente existente. Apenas pacientes autenticados pod
   "sexo": "m",
   "proficao": "Profissão",
   "diagnosticoClinico": "Diagnóstico Clínico",
+  "password" : "passwordTeste",
   "diagnosticoFisio": "Diagnóstico Fisioterapêutico",
-  "
-
-emailPaciente": "exemplo@example.com",
+  "emailPaciente": "exemplo@example.com",
   "tipoUsuario": 4
 }
 ```
@@ -420,11 +423,12 @@ Cria um novo fisioterapeuta no sistema. Este endpoint está disponível para tod
   "sexo": "m",
   "formacao": "string",
   "emailFisioterapeuta": "TesteFisio@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 2
 }
 ```
 
-![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/29a0e72d-dfc6-4f7c-8045-e3f7f63f8c0d)
+
 
 ### Endpoint: Atualizar Fisioterapeuta
 
@@ -441,19 +445,16 @@ Atualiza os detalhes de um fisioterapeuta existente. Apenas fisioterapeutas aute
 #### Corpo da Requisição (application/json)
 ```json
 {
-  "idFisioterapeuta": 10,
-  "nomeFisioterapeuta": "exemplo@example.com",
-  "cpf": "12345678900",
-  "uf": "SP",
-  "endereco": "Rua A, 123",
-  "numeroCasa": "1",
-  "dataDeNascimento": "1990-01-01T00:00:00Z",
-  "sexo": "m",
-  "formacao": "Formação",
-  "emailFisioterapeuta": "exemplo@example.com",
-  "tipoUsuario": 2
+  "idFisio": 0,
+  "nomeFisio": "string",
+  "emailFisio": "user@example.com",
+  "matricula": 0,
+  "semestreFisio": "string",
+  "password": "string",
+  "tipoUsuario": 3
 }
 ```
+![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/62054c45-74c1-4eab-a678-0a3f68c14dfd)
 
 #### Respostas
 - `200 OK`: O objeto FisioterapeutaDto atualizado.
@@ -536,19 +537,13 @@ Cria um novo coordenador no sistema. Este endpoint está disponível para todos,
 {
   "idCoordenador": 0,
   "nomeCoordenador": "string",
-  "cpf": "string",
-  "uf": "string",
-  "endereco": "string",
-  "numeroCasa": "string",
-  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
-  "sexo": "m",
-  "formacao": "string",
-  "emailCoordenador": "TesteCoord@example.com",
-  "tipoUsuario": 3
+  "emailCoordenador": "user@example.com",
+  "password": "string",
+  "tipoUsuario": 2
 }
 ```
 
-![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/3a56cfe6-7f1a-4b25-8128-3c4eb67e7b49)
+![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/a0bff2fa-29ce-4518-9a81-2934fda4b988)
 
 ### Endpoint: Atualizar Coordenador
 
@@ -565,17 +560,11 @@ Atualiza os detalhes de um coordenador existente. Apenas coordenadores autentica
 #### Corpo da Requisição (application/json)
 ```json
 {
-  "idCoordenador": 10,
-  "nomeCoordenador": "exemplo@example.com",
-  "cpf": "12345678900",
-  "uf": "SP",
-  "endereco": "Rua A, 123",
-  "numeroCasa": "1",
-  "dataDeNascimento": "1990-01-01T00:00:00Z",
-  "sexo": "m",
-  "formacao": "Formação",
-  "emailCoordenador": "exemplo@example.com",
-  "tipoUsuario": 3
+  "idCoordenador": 0,
+  "nomeCoordenador": "string",
+  "emailCoordenador": "testeCoord@example.com",
+  "password": "string",
+  "tipoUsuario": 2
 }
 ```
 
@@ -660,21 +649,16 @@ Cria um novo administrador no sistema. Este endpoint está disponível para todo
 #### Corpo da Requisição (application/json)
 ```json
 {
-  "idAdministrador": 0,
-  "nomeAdministrador": "string",
-  "cpf": "string",
-  "uf": "string",
-  "endereco": "string",
-  "numeroCasa": "string",
-  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
-  "sexo": "m",
-  "formacao": "string",
-  "emailAdministrador": "TesteAdmin@example.com",
+  "idAdmin": 0,
+  "nomeAdmin": "string",
+  "emailAdmin": "user@example.com",
+  "password": "string",
   "tipoUsuario": 1
 }
 ```
 
-![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/60d6efb1-3946-4df0-9780-46be01df1fd1)
+![image](https://github.com/GeanVitorM/Authetication.Server/assets/166526691/b7b7edca-9506-45d9-bb39-147bcce1f465)
+
 
 ### Endpoint: Atualizar Administrador
 
@@ -691,16 +675,10 @@ Atualiza os detalhes de um administrador existente. Apenas administradores auten
 #### Corpo da Requisição (application/json)
 ```json
 {
-  "idAdministrador": 10,
-  "nomeAdministrador": "exemplo@example.com",
-  "cpf": "12345678900",
-  "uf": "SP",
-  "endereco": "Rua A, 123",
-  "numeroCasa": "1",
-  "dataDeNascimento": "1990-01-01T00:00:00Z",
-  "sexo": "m",
-  "formacao": "Formação",
-  "emailAdministrador": "exemplo@example.com",
+  "idAdmin": 0,
+  "nomeAdmin": "string",
+  "emailAdmin": "user@example.com",
+  "password": "string",
   "tipoUsuario": 1
 }
 ```
@@ -749,11 +727,15 @@ Representa os dados de um paciente no sistema.
   "uf": "string",
   "endereco": "string",
   "numeroCasa": "string",
-  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
+  "dataDeNascimento": "2024-06-19T14:44:27.902Z",
   "sexo": "m",
-  "profissao": "string",
-  "emailPaciente": "TestePaciente@example.com",
-  "tipoUsuario": 4
+  "proficao": "string",
+  "diagnosticoClinico": "string",
+  "diagnosticoFisio": "string",
+  "primeiraConsulta": true,
+  "emailPaciente": "user@example.com",
+  "password": "string",
+  "tipoUsuario": 1
 }
 ```
 
@@ -763,14 +745,10 @@ Representa os dados de um fisioterapeuta no sistema.
 {
   "idFisioterapeuta": 0,
   "nomeFisioterapeuta": "string",
-  "cpf": "string",
-  "uf": "string",
-  "endereco": "string",
-  "numeroCasa": "string",
-  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
-  "sexo": "m",
-  "formacao": "string",
+  "Semestre": "string",
+  "matricula": "string",
   "emailFisioterapeuta": "TesteFisio@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 2
 }
 ```
@@ -781,14 +759,8 @@ Representa os dados de um coordenador no sistema.
 {
   "idCoordenador": 0,
   "nomeCoordenador": "string",
-  "cpf": "string",
-  "uf": "string",
-  "endereco": "string",
-  "numeroCasa": "string",
-  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
-  "sexo": "m",
-  "formacao": "string",
   "emailCoordenador": "TesteCoord@example.com",
+  "password" : "passwordTeste",
   "tipoUsuario": 3
 }
 ```
@@ -799,14 +771,19 @@ Representa os dados de um administrador no sistema.
 {
   "idAdministrador": 0,
   "nomeAdministrador": "string",
-  "cpf": "string",
-  "uf": "string",
-  "endereco": "string",
-  "numeroCasa": "string",
-  "dataDeNascimento": "2024-06-12T19:02:34.906Z",
-  "sexo": "m",
-  "formacao": "string",
   "emailAdministrador": "TesteAdmin@example.com",
+  "password" : "passwordTeste",
+  "tipoUsuario": 1
+}
+```
+
+## UsuarioDto
+Representa os dados de um Usuario no sistema.
+```json
+{
+  "idUser": 0,
+  "username": "admin@example.com",
+  "password": "string",
   "tipoUsuario": 1
 }
 ```
