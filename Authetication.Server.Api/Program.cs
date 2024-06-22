@@ -84,8 +84,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
         builder => builder
-            .AllowAnyOrigin() 
-            .AllowAnyMethod() 
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
             .AllowAnyHeader());
 });
 
@@ -128,11 +128,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowSpecificOrigin");
 
-app.UseJwtRoleExtractor();
 app.UseHttpsRedirection();
+app.UseJwtRoleExtractor();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "5000"}");

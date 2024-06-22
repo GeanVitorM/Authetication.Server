@@ -87,6 +87,7 @@ public class AuthService : IAuthService
                 break;
             case TipoUsuario.Paciente:
                 var paciente = await _pacienteService.GetPacienteById(usuarioDto.IdUser);
+                claims.Add(new Claim("Id", paciente.IdPaciente.ToString()));
                 claims.Add(new Claim("Role", TipoUsuario.Paciente.ToString()));
                 claims.Add(new Claim("Nome", paciente.NomePaciente));
                 claims.Add(new Claim("Email", paciente.EmailPaciente));

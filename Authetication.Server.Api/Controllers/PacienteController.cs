@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Authetication.Server.Api.Middlewares;
 using Microsoft.AspNetCore.JsonPatch;
+using System.Security.Claims;
 
 namespace Authetication.Server.Api.Controllers;
 
@@ -94,12 +95,20 @@ public class PacienteController : ControllerBase
         }
     }
 
-    [HttpPatch("{id}/PrimeiraConsulta")]
-    [Authorize(Policy = "FisioterapeutaPolicy")]
-    public async Task<ActionResult> UpdatePrimeiraConsulta(int id)
+    [HttpPatch("PrimeiraConsulta")]
+    [Authorize(Policy = "PacientePolicy")]
+    public async Task<ActionResult> UpdatePrimeiraConsulta()
     {
         try
         {
+            var userIdClaim = User.FindFirst("UserId");
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            int id = int.Parse(userIdClaim.Value);
+
             var pacienteDto = await _service.GetPacienteById(id);
             if (pacienteDto == null)
             {
@@ -113,11 +122,11 @@ public class PacienteController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"An error occurred while updating the 'PrimeiraConsulta' field for user with ID {id}.");
+            var userId = User.FindFirst("UserId")?.Value ?? "unknown";
+            _logger.LogError(ex, $"An error occurred while updating the 'PrimeiraConsulta' field for user with ID {userId}.");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
-
 
     [HttpPut()]
     [Authorize(Policy = "PacientePolicy")]

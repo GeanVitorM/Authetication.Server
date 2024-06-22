@@ -18,11 +18,18 @@ namespace Authetication.Server.Api.Middlewares
         {
             var claimsPrincipal = context.User;
             var roleClaim = claimsPrincipal.FindFirst(ClaimTypes.Role);
+            var userIdClaim = claimsPrincipal.FindFirst("UserId");
 
             if (roleClaim != null)
             {
                 var role = roleClaim.Value;
-                context.Request.Headers.Add("X-User-Role", role);
+                context.Request.Headers["X-User-Role"] = role;
+            }
+
+            if (userIdClaim != null)
+            {
+                var userId = userIdClaim.Value;
+                context.Request.Headers["X-User-Id"] = userId;
             }
 
             await _next(context);
