@@ -95,20 +95,12 @@ public class PacienteController : ControllerBase
         }
     }
 
-    [HttpPatch("PrimeiraConsulta")]
-    [Authorize(Policy = "PacientePolicy")]
-    public async Task<ActionResult> UpdatePrimeiraConsulta()
+    [HttpPatch("{id}/PrimeiraConsulta")]
+    [Authorize(Policy = "FisioterapeutaPolicy")]
+    public async Task<ActionResult> UpdatePrimeiraConsulta(int id)
     {
         try
         {
-            var userIdClaim = User.FindFirst("UserId");
-            if (userIdClaim == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
-
-            int id = int.Parse(userIdClaim.Value);
-
             var pacienteDto = await _service.GetPacienteById(id);
             if (pacienteDto == null)
             {
@@ -122,8 +114,7 @@ public class PacienteController : ControllerBase
         }
         catch (Exception ex)
         {
-            var userId = User.FindFirst("UserId")?.Value ?? "unknown";
-            _logger.LogError(ex, $"An error occurred while updating the 'PrimeiraConsulta' field for user with ID {userId}.");
+            _logger.LogError(ex, $"An error occurred while updating the 'PrimeiraConsulta' field for user with ID {id}.");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
